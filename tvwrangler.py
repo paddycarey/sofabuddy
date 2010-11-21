@@ -44,6 +44,15 @@ def getfileinfo(filename):
 
 def do_file_move(showid, showname, snum, enum, epname, quality, fileext, origfilename, epaired):
 
+    def find_relink(fullnukepath, nukemoveto):
+      for x in os.listdir(download_dir):
+        linkpath = os.path.join(download_dir, x)
+        if os.path.islink(linkpath):
+          if fullnukepath == os.readlink(linkpath):
+            os.unlink(linkpath)
+            os.symlink(nukemoveto, linkpath)
+            break
+
     season_dir = 'Season ' + snum
     episode_filename = '[' + snum + 'x' + enum + ']' + ' ' + epname + ' [' + quality + ']' + fileext
     newpath = os.path.join(tv_dir, showname, season_dir, episode_filename)
@@ -88,17 +97,6 @@ def do_file_move(showid, showname, snum, enum, epname, quality, fileext, origfil
       if not os.path.islink(origfilename) and os.path.isfile(origfilename):
         os.renames(origfilename, newpath)
         os.symlink(newpath, origfilename)
-
-
-def find_relink(fullnukepath, nukemoveto):
-
-    for x in os.listdir(download_dir):
-      linkpath = os.path.join(download_dir, x)
-      if os.path.islink(linkpath):
-        if fullnukepath == os.readlink(linkpath):
-          os.unlink(linkpath)
-          os.symlink(nukemoveto, linkpath)
-          break
 
 
 if __name__ == "__main__":
