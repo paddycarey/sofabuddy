@@ -2,10 +2,10 @@
 
 import sys, re, os, string, tvrage.api
 
-download_dir = '/media/raid5/downloads_tvtorrents'
-tv_dir = '/media/raid5/tv_library'
-banner_dir = '/home/paddy/Dropbox/tvthumbs/current'
-nuke_dir = '/media/raid5/nuked'
+download_dir = '/media/somedir/downloads'
+tv_dir = '/media/somedir/tv_library'
+banner_dir = '/home/user/somedir'
+nuke_dir = '/media/somedir/nuked'
 lockfile = '/tmp/tvwrangler_lock'
 
 def getfileinfo(filename):
