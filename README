@@ -13,8 +13,4 @@ This script uses the python-tvrage api from pypi.
 
 To install the api please run "easy_install python-tvrage" as root.
 
-Usage:
-
-make the file exectubale: chmod +x tvwrangler.py
-
-run the script: ./tvwrangler.py
+Usage: ./tvwrangler.py
