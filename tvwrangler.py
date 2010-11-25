@@ -4,7 +4,6 @@ import sys, re, os, string, tvrage.api
 
 download_dir = '/media/somedir/downloads'
 tv_dir = '/media/somedir/tv_library'
-banner_dir = '/home/user/somedir'
 nuke_dir = '/media/somedir/nuked'
 lockfile = '/tmp/tvwrangler_lock'
 
@@ -56,21 +55,12 @@ def do_file_move(showid, showname, snum, enum, epname, quality, fileext, origfil
     season_dir = 'Season ' + snum
     episode_filename = '[' + snum + 'x' + enum + ']' + ' ' + epname + ' [' + quality + ']' + fileext
     newpath = os.path.join(tv_dir, showname, season_dir, episode_filename)
-    bannername = showname + '.jpg'
-    showbanner = os.path.join(banner_dir, bannername)
-    showdirbanner = os.path.join(tv_dir, showname, 'folder.jpg')
-    seasondirbanner = os.path.join(tv_dir, showname, season_dir, 'folder.jpg')
-
 
     sdir = os.path.split(newpath)
 
     if not os.path.isdir(sdir[0]):
       os.renames(origfilename, newpath)
       os.symlink(newpath, origfilename)
-      if not os.path.islink(seasondirbanner):
-        os.symlink('../folder.jpg', seasondirbanner)
-      if not os.path.islink(showdirbanner):
-        os.symlink(showbanner, showdirbanner)
     else:
       for nukefile in os.listdir(sdir[0]):
         XXxXX = snum + 'x' + enum
