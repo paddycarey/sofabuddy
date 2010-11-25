@@ -21,7 +21,11 @@ import sys, re, os, shutil, string, tvrage.api, ConfigParser
 config = ConfigParser.ConfigParser()
 config.read('config.cfg')
 
-download_dir = config.get('directories', 'download_dir')
+try:
+    download_dir = sys.argv[1]
+except:
+    download_dir = config.get('directories', 'download_dir')
+
 tv_dir = config.get('directories', 'tv_dir')
 nuke_dir = config.get('directories', 'nuke_dir')
 
