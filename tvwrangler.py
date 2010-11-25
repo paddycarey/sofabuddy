@@ -16,11 +16,15 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, re, os, string, tvrage.api
+import sys, re, os, string, tvrage.api, ConfigParser
 
-download_dir = '/media/somedir/downloads'
-tv_dir = '/media/somedir/tv_library'
-nuke_dir = '/media/somedir/nuked'
+config = ConfigParser.ConfigParser()
+config.read('config.cfg')
+
+download_dir = config.get('directories', 'download_dir')
+tv_dir = config.get('directories', 'tv_dir')
+nuke_dir = config.get('directories', 'nuke_dir')
+
 lockfile = '/tmp/tvwrangler_lock'
 
 def getfileinfo(filename):
