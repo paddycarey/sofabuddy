@@ -1,0 +1,16 @@
+README
+
+tvwrangler.py - An auto sorter for tv episodes
+
+tvwrangler.py will search a folder for all tv episodes and automatically sort
+them into the correct Show/Season/Episode hierarchy.  It will also retrieve the
+episode title from tvrage.com and rename the file to make it more readable.
+
+tvwrangler.py will also automatically handle replacing (nuking) of episodes to
+ensure you always have the most up to date copy of the episode.
+
+Usage:
+
+make the file exectubale: chmod +x tvwrangler.py
+
+run the script: ./tvwrangler.py
