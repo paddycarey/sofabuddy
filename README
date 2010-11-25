@@ -9,6 +9,10 @@ episode title from tvrage.com and rename the file to make it more readable.
 tvwrangler.py will also automatically handle replacing (nuking) of episodes to
 ensure you always have the most up to date copy of the episode.
 
+This script uses the python-tvrage api from pypi.
+
+To install the api please run "easy_install python-tvrage" as root.
+
 Usage:
 
 make the file exectubale: chmod +x tvwrangler.py
