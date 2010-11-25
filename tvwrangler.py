@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, re, os, string, tvrage.api, ConfigParser
+import sys, re, os, shutil, string, tvrage.api, ConfigParser
 
 config = ConfigParser.ConfigParser()
 config.read('config.cfg')
@@ -79,7 +79,8 @@ def do_file_move(showid, showname, snum, enum, epname, quality, fileext, origfil
     sdir = os.path.split(newpath)
 
     if not os.path.isdir(sdir[0]):
-      os.renames(origfilename, newpath)
+      os.makedirs(sdir[0])
+      shutil.move(origfilename, newpath)
       os.symlink(newpath, origfilename)
     else:
       for nukefile in os.listdir(sdir[0]):
@@ -89,23 +90,23 @@ def do_file_move(showid, showname, snum, enum, epname, quality, fileext, origfil
           nukemoveto = os.path.join(nuke_dir, nukefile)
           nukemoveorigto = os.path.join(nuke_dir, origfilename)
           if quality == '1080P':
-            os.renames(fullnukepath, nukemoveto)
+            shutil.move(fullnukepath, nukemoveto)
             find_relink(fullnukepath, nukemoveto)
             print 'NUKE: NEW1080P', origfilename, fullnukepath
           elif quality == '720P' and nukefile.find('1080P') < 0:
-            os.renames(fullnukepath, nukemoveto)
+            shutil.move(fullnukepath, nukemoveto)
             find_relink(fullnukepath, nukemoveto)
             print 'NUKE: NEW720P', origfilename, fullnukepath
           elif nukefile.find('1080P') < 0 and nukefile.find('720P') < 0:
-            os.renames(fullnukepath, nukemoveto)
+            shutil.move(fullnukepath, nukemoveto)
             find_relink(fullnukepath, nukemoveto)
             print 'NUKE:', origfilename, fullnukepath
           else:
-            os.renames(origfilename, nukemoveorigto)
+            shutil.move(origfilename, nukemoveorigto)
             os.symlink(nukemoveorigto, origfilename)
             print 'NUKE: BETTERAVAIL', fullnukepath, origfilename
       if not os.path.islink(origfilename) and os.path.isfile(origfilename):
-        os.renames(origfilename, newpath)
+        shutil.move(origfilename, newpath)
         os.symlink(newpath, origfilename)
 
 
