@@ -19,7 +19,7 @@
 import sys, re, os, shutil, string, tvrage.api, ConfigParser
 
 config = ConfigParser.ConfigParser()
-config.read('config.cfg')
+config.read('/etc/sofabuddy/config.cfg')
 
 try:
     download_dir = sys.argv[1]
