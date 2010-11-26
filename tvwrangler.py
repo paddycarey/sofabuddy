@@ -48,7 +48,8 @@ def getfileinfo(filename):
       except:
         results = re.search('[0-9]x[0-9][0-9]', filename, re.I)
         sxxexx = results.group(0)
-        snum = sxxexx[0:1]
+        snum_temp = sxxexx[0:1]
+        snum = '0' + snum_temp
         enum = sxxexx[2:4]
     results2 = re.search('1080p|720p', filename, re.I)
     results3 = re.search('DVDRip|HDTV|PDTV|DSR|VHSRip', filename, re.I)
