@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, re, os, shutil, string, tvrage.api, ConfigParser
+import sys, re, os, shutil, string, tvrage.api, ConfigParser, time, datetime
 
 config = ConfigParser.ConfigParser()
 config.read('/etc/sofabuddy/config.cfg')
