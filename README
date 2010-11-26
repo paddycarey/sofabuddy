@@ -15,6 +15,9 @@ To install the api please run "easy_install python-tvrage" as root.
 
 Usage: ./tvwrangler.py
 
+You should create /etc/sofabuddy/config.cfg using example_config.cfg as an
+example.  You should define your directories in this file.
+
 You can specify a directory to scan by using it as the first argument on the
 command line, otherwise tvwrangler.py will scan the default download directory
 as defined in the config file.
