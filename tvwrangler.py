@@ -35,9 +35,21 @@ def getfileinfo(filename):
 
     fileext = os.path.splitext(filename)
     results = re.search('s[0-9][0-9]e[0-9][0-9]', filename, re.I)
-    sxxexx = results.group(0)
-    snum = sxxexx[1:3]
-    enum = sxxexx[4:6]
+    try:
+      sxxexx = results.group(0)
+      snum = sxxexx[1:3]
+      enum = sxxexx[4:6]
+    except:
+      try:
+        results = re.search('[0-9][0-9]x[0-9][0-9]', filename, re.I)
+        sxxexx = results.group(0)
+        snum = sxxexx[0:2]
+        enum = sxxexx[3:5]
+      except:
+        results = re.search('[0-9]x[0-9][0-9]', filename, re.I)
+        sxxexx = results.group(0)
+        snum = sxxexx[0:1]
+        enum = sxxexx[2:4]
     results2 = re.search('1080p|720p', filename, re.I)
     results3 = re.search('DVDRip|HDTV|PDTV|DSR|VHSRip', filename, re.I)
     if results2:
