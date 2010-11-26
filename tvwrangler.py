@@ -71,14 +71,13 @@ def getfileinfo(filename):
     rawepname = episode.title.encode("ascii", "replace")
     rawepname1 = re.sub('/', '-', rawepname)
     epname = re.sub('\?', '-', rawepname1)
-    epaired = str(episode.airdate)
-    details = show.showid, show.name, snum, enum, epname, quality, fileext[1], filename, epaired
+    details = show.showid, show.name, snum, enum, epname, quality, fileext[1], filename
     log_line = show.name + ' [' + snum + 'x' + enum + '] ' + epname + ' [' + quality + ']' + fileext[1]
     print 'IDENTIFIED:', log_line, 'FILE:', filename
     return details
 
 
-def do_file_move(showid, showname, snum, enum, epname, quality, fileext, origfilename, epaired):
+def do_file_move(showid, showname, snum, enum, epname, quality, fileext, origfilename):
 
     def find_relink(fullnukepath, nukemoveto):
       for x in os.listdir(download_dir):
@@ -140,7 +139,7 @@ if __name__ == "__main__":
           try:
             episode_info = getfileinfo(filename)
             try:
-              moveshit = do_file_move(episode_info[0], episode_info[1], episode_info[2], episode_info[3], episode_info[4], episode_info[5], episode_info[6], episode_info[7], episode_info[8])
+              moveshit = do_file_move(episode_info[0], episode_info[1], episode_info[2], episode_info[3], episode_info[4], episode_info[5], episode_info[6], episode_info[7])
             except:
               print 'ERROR: MOVE:', filename
           except:
