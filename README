@@ -14,3 +14,7 @@ This script uses the python-tvrage api from pypi.
 To install the api please run "easy_install python-tvrage" as root.
 
 Usage: ./tvwrangler.py
+
+You can specify a directory to scan by using it as the first argument on the
+command line, otherwise tvwrangler.py will scan the default download directory
+as defined in the config file.
