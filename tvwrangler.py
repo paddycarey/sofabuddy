@@ -22,7 +22,7 @@ config = ConfigParser.ConfigParser()
 config.read('/etc/sofabuddy/config.cfg')
 
 try:
-    if os.isdir(sys.argv[1]):
+    if os.path.isdir(sys.argv[1]):
         download_dir = sys.argv[1]
     else:
         print timestamp(), 'ERROR:', sys.argv[1], 'is not a directory. Using default.'
