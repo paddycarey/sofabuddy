@@ -83,6 +83,7 @@ def getfileinfo(filename):
     print timestamp(), 'IDENTIFIED:', log_line, 'FILE:', filename
     return details
 
+
 def find_relink(fullnukepath, nukemoveto):
 
     for x in os.listdir(download_dir):
@@ -92,6 +93,14 @@ def find_relink(fullnukepath, nukemoveto):
                 os.unlink(linkpath)
                 os.symlink(nukemoveto, linkpath)
                 break
+
+def find_origfilename(fullnukepath):
+
+    for x in os.listdir(download_dir):
+        linkpath = os.path.join(download_dir, x)
+        if os.path.islink(linkpath):
+            if fullnukepath == os.readlink(linkpath):
+                return x
 
 def do_file_move(showid, showname, snum, enum, epname, quality, fileext, origfilename):
 
@@ -110,7 +119,11 @@ def do_file_move(showid, showname, snum, enum, epname, quality, fileext, origfil
             XXxXX = snum + 'x' + enum
             if nukefile.find(XXxXX) > 0:
                 fullnukepath = os.path.join(sdir[0], nukefile)
-                nukemoveto = os.path.join(nuke_dir, nukefile)
+                nuke_origfilename = find_origfilename(fullnukepath)
+                if nuke_origfilename == 'None':
+                    nukemoveto = os.path.join(nuke_dir, nukefile)
+                else:
+                    nukemoveto = os.path.join(nuke_dir, nuke_origfilename)
                 nukemoveorigto = os.path.join(nuke_dir, origfilename)
                 if quality == '1080P':
                     shutil.move(fullnukepath, nukemoveto)
