@@ -162,7 +162,7 @@ if __name__ == "__main__":
                         moveshit = do_file_move(episode_info[0], episode_info[1], episode_info[2], episode_info[3], episode_info[4], episode_info[5], episode_info[6], episode_info[7])
                     except Exception as inst:
                         print timestamp(), 'ERROR: MOVE:', "(", filename, ")", inst
-                except:
-                    print timestamp(), 'ERROR: IDENTIFY:', filename
+                except Exception as inst:
+                    print timestamp(), 'ERROR: IDENTIFY:', "(", filename, ")", inst
         lockup.close()
         os.remove(lockfile)
