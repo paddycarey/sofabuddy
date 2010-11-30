@@ -80,7 +80,8 @@ def getfileinfo(filename):
     epname = re.sub('\?', '-', rawepname1)
     details = show.showid, show.name, snum, enum, epname, quality, fileext[1], filename
     log_line = show.name + ' [' + snum + 'x' + enum + '] ' + epname + ' [' + quality + ']' + fileext[1]
-    print timestamp(), 'IDENTIFIED:', log_line, 'FILE:', filename
+    idmessage = 'ACTION=IDENTIFY FILE=' + filename + ' DETAILS=' + log_line
+    print timestamp(), idmessage
     return details
 
 
@@ -114,6 +115,8 @@ def do_file_move(showid, showname, snum, enum, epname, quality, fileext, origfil
         os.makedirs(sdir[0])
         shutil.move(origfilename, newpath)
         os.symlink(newpath, origfilename)
+        movemessage = 'ACTION=MOVE MOVESRC=' + origfilename + ' MOVEDEST=' + showname + ' ' + episode_filename
+        print timestamp(), movemessage
     else:
         for nukefile in os.listdir(sdir[0]):
             XXxXX = snum + 'x' + enum
@@ -122,35 +125,44 @@ def do_file_move(showid, showname, snum, enum, epname, quality, fileext, origfil
                 nuke_origfilename = find_origfilename(fullnukepath)
                 if nuke_origfilename == 'None':
                     nukemoveto = os.path.join(nuke_dir, nukefile)
+                    nukedestname = os.path.split(nukemoveto)
                 else:
                     nukemoveto = os.path.join(nuke_dir, nuke_origfilename)
+                    nukedestname = os.path.split(nukemoveto)
                 nukemoveorigto = os.path.join(nuke_dir, origfilename)
                 if quality == '1080P':
                     shutil.move(fullnukepath, nukemoveto)
                     find_relink(fullnukepath, nukemoveto)
-                    print timestamp(), 'NUKE: NEW1080P', origfilename, fullnukepath
+                    nukemessage = 'ACTION=NUKE NUKESRC=' + nukefile + ' NUKEDEST=' + nukedestname[1] + ' NUKEDBY=' + origfilename + ' REASON=New1080P'
+                    print timestamp(), nukemessage
                 elif quality == '720P' and nukefile.find('1080P') < 0:
                     shutil.move(fullnukepath, nukemoveto)
                     find_relink(fullnukepath, nukemoveto)
-                    print timestamp(), 'NUKE: NEW720P', origfilename, fullnukepath
+                    nukemessage = 'ACTION=NUKE NUKESRC=' + nukefile + ' NUKEDEST=' + nukedestname[1] + ' NUKEDBY=' + origfilename + ' REASON=New720P'
+                    print timestamp(), nukemessage
                 elif nukefile.find('1080P') < 0 and nukefile.find('720P') < 0:
                     shutil.move(fullnukepath, nukemoveto)
                     find_relink(fullnukepath, nukemoveto)
-                    print timestamp(), 'NUKE:', origfilename, fullnukepath
+                    nukemessage = 'ACTION=NUKE NUKESRC=' + nukefile + ' NUKEDEST=' + nukedestname[1] + ' NUKEDBY=' + origfilename + ' REASON=NewFile'
+                    print timestamp(), nukemessage
                 else:
                     shutil.move(origfilename, nukemoveorigto)
                     os.symlink(nukemoveorigto, origfilename)
-                    print timestamp(), 'NUKE: BETTERAVAIL', fullnukepath, origfilename
+                    nukemessage = 'ACTION=NUKE NUKESRC=' + origfilename + ' NUKEDEST=' + origfilename + ' NUKEDBY=' + nukefile + ' REASON=BetterAvail'
+                    print timestamp(), nukemessage
         if not os.path.islink(origfilename) and os.path.isfile(origfilename):
             shutil.move(origfilename, newpath)
             os.symlink(newpath, origfilename)
+            movemessage = 'ACTION=MOVE MOVESRC=' + origfilename + ' MOVEDEST=' + showname + ' ' + episode_filename
+            print timestamp(), movemessage
 
 
 if __name__ == "__main__":
 
     try:
         is_locked = open(lockfile)
-        print timestamp(), 'ERROR: tvwrangler.py is locked'
+        errormessage = 'ACTION=Run Script STATUS=ERROR FILE=' + lockfile + ' ERROR=Locked'
+        print timestamp(), errormessage
     except:
         lockup = open(lockfile,'w')
         os.chdir(download_dir)
@@ -162,13 +174,17 @@ if __name__ == "__main__":
                         moveshit = do_file_move(episode_info[0], episode_info[1], episode_info[2], episode_info[3], episode_info[4], episode_info[5], episode_info[6], episode_info[7])
                     except Exception as inst:
                         if download_dir == config.get('directories', 'download_dir'):
-                            print timestamp(), 'ERROR: MOVE:', "(", filename, ")", inst
+                            errormessage = 'ACTION=MOVE STATUS=ERROR FILE=' + filename + ' ERROR=' + inst
+                            print timestamp(), errormessage
                         else:
-                            print timestamp(), 'ERROR: MOVE:', "(", download_dir, ")", "(", filename, ")", inst
+                            errormessage = 'ACTION=MOVE STATUS=ERROR FILE=' + os.path.join(download_dir, filename) + ' ERROR=' + inst
+                            print timestamp(), errormessage
                 except Exception as inst:
                     if download_dir == config.get('directories', 'download_dir'):
-                        print timestamp(), 'ERROR: IDENTIFY:', "(", filename, ")", inst
+                        errormessage = 'ACTION=IDENTIFY STATUS=ERROR FILE=' + filename + ' ERROR=' + inst
+                        print timestamp(), errormessage
                     else:
-                        print timestamp(), 'ERROR: IDENTIFY:', "(", download_dir, ")", "(", filename, ")", inst
+                        errormessage = 'ACTION=IDENTIFY STATUS=ERROR FILE=' + os.path.join(download_dir, filename) + ' ERROR=' + inst
+                        print timestamp(), errormessage
         lockup.close()
         os.remove(lockfile)
