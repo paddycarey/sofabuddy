@@ -161,10 +161,10 @@ if __name__ == "__main__":
                     try:
                         moveshit = do_file_move(episode_info[0], episode_info[1], episode_info[2], episode_info[3], episode_info[4], episode_info[5], episode_info[6], episode_info[7])
                     except Exception as inst:
-                    if download_dir == config.get('directories', 'download_dir'):
-                        print timestamp(), 'ERROR: MOVE:', "(", filename, ")", inst
-                    else:
-                        print timestamp(), 'ERROR: MOVE:', "(", download_dir, ")", "(", filename, ")", inst
+                        if download_dir == config.get('directories', 'download_dir'):
+                            print timestamp(), 'ERROR: MOVE:', "(", filename, ")", inst
+                        else:
+                            print timestamp(), 'ERROR: MOVE:', "(", download_dir, ")", "(", filename, ")", inst
                 except Exception as inst:
                     if download_dir == config.get('directories', 'download_dir'):
                         print timestamp(), 'ERROR: IDENTIFY:', "(", filename, ")", inst
