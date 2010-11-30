@@ -25,7 +25,8 @@ try:
     if os.path.isdir(sys.argv[1]):
         download_dir = sys.argv[1]
     else:
-        print timestamp(), 'ERROR:', sys.argv[1], 'is not a directory. Using default.'
+        errormessage = 'ACTION=RunScript STATUS=ERROR ERROR=' + sys.argv[1] + ' is not a directory. Using default.'
+        print timestamp(), errormessage
         download_dir = config.get('directories', 'download_dir')
 except:
     download_dir = config.get('directories', 'download_dir')
@@ -161,7 +162,7 @@ if __name__ == "__main__":
 
     try:
         is_locked = open(lockfile)
-        errormessage = 'ACTION=Run Script STATUS=ERROR FILE=' + lockfile + ' ERROR=Locked'
+        errormessage = 'ACTION=RunScript STATUS=ERROR FILE=' + lockfile + ' ERROR=Locked'
         print timestamp(), errormessage
     except:
         lockup = open(lockfile,'w')
