@@ -26,7 +26,7 @@ try:
         download_dir = sys.argv[1]
     else:
         errormessage = 'ACTION=RunScript STATUS=ERROR ERROR=' + sys.argv[1] + ' is not a directory. Using default.'
-        print timestamp(), errormessage
+        log_output(errormessage)
         download_dir = config.get('directories', 'download_dir')
 except:
     download_dir = config.get('directories', 'download_dir')
@@ -35,6 +35,14 @@ tv_dir = config.get('directories', 'tv_dir')
 nuke_dir = config.get('directories', 'nuke_dir')
 
 lockfile = '/tmp/tvwrangler_lock'
+
+def log_output(message):
+    printmessage = timestamp() + ' ' + message
+    logmessage = printmessage + '\n'
+    print printmessage
+    logfile = open(config.get('logging', 'log_file'),'a')
+    logfile.write(logmessage)
+    logfile.close()
 
 def timestamp():
     return datetime.datetime.now().strftime("[%Y/%m/%d %H:%M:%S]")
@@ -82,7 +90,7 @@ def getfileinfo(filename):
     details = show.showid, show.name, snum, enum, epname, quality, fileext[1], filename
     log_line = show.name + ' [' + snum + 'x' + enum + '] ' + epname + ' [' + quality + ']' + fileext[1]
     idmessage = 'ACTION=IDENTIFY FILE=' + filename + ' DETAILS=' + log_line
-    print timestamp(), idmessage
+    log_output(idmessage)
     return details
 
 
@@ -117,7 +125,7 @@ def do_file_move(showid, showname, snum, enum, epname, quality, fileext, origfil
         shutil.move(origfilename, newpath)
         os.symlink(newpath, origfilename)
         movemessage = 'ACTION=MOVE MOVESRC=' + origfilename + ' MOVEDEST=' + showname + ' ' + episode_filename
-        print timestamp(), movemessage
+        log_output(movemessage)
     else:
         for nukefile in os.listdir(sdir[0]):
             XXxXX = snum + 'x' + enum
@@ -135,27 +143,27 @@ def do_file_move(showid, showname, snum, enum, epname, quality, fileext, origfil
                     shutil.move(fullnukepath, nukemoveto)
                     find_relink(fullnukepath, nukemoveto)
                     nukemessage = 'ACTION=NUKE NUKESRC=' + nukefile + ' NUKEDEST=' + nukedestname[1] + ' NUKEDBY=' + origfilename + ' REASON=New1080P'
-                    print timestamp(), nukemessage
+                    log_output(nukemessage)
                 elif quality == '720P' and nukefile.find('1080P') < 0:
                     shutil.move(fullnukepath, nukemoveto)
                     find_relink(fullnukepath, nukemoveto)
                     nukemessage = 'ACTION=NUKE NUKESRC=' + nukefile + ' NUKEDEST=' + nukedestname[1] + ' NUKEDBY=' + origfilename + ' REASON=New720P'
-                    print timestamp(), nukemessage
+                    log_output(nukemessage)
                 elif nukefile.find('1080P') < 0 and nukefile.find('720P') < 0:
                     shutil.move(fullnukepath, nukemoveto)
                     find_relink(fullnukepath, nukemoveto)
                     nukemessage = 'ACTION=NUKE NUKESRC=' + nukefile + ' NUKEDEST=' + nukedestname[1] + ' NUKEDBY=' + origfilename + ' REASON=NewFile'
-                    print timestamp(), nukemessage
+                    log_output(nukemessage)
                 else:
                     shutil.move(origfilename, nukemoveorigto)
                     os.symlink(nukemoveorigto, origfilename)
                     nukemessage = 'ACTION=NUKE NUKESRC=' + origfilename + ' NUKEDEST=' + origfilename + ' NUKEDBY=' + nukefile + ' REASON=BetterAvail'
-                    print timestamp(), nukemessage
+                    log_output(nukemessage)
         if not os.path.islink(origfilename) and os.path.isfile(origfilename):
             shutil.move(origfilename, newpath)
             os.symlink(newpath, origfilename)
             movemessage = 'ACTION=MOVE MOVESRC=' + origfilename + ' MOVEDEST=' + showname + ' ' + episode_filename
-            print timestamp(), movemessage
+            log_output(movemessage)
 
 
 if __name__ == "__main__":
@@ -163,7 +171,7 @@ if __name__ == "__main__":
     try:
         is_locked = open(lockfile)
         errormessage = 'ACTION=RunScript STATUS=ERROR FILE=' + lockfile + ' ERROR=Locked'
-        print timestamp(), errormessage
+        log_output(errormessage)
     except:
         lockup = open(lockfile,'w')
         os.chdir(download_dir)
@@ -176,16 +184,16 @@ if __name__ == "__main__":
                     except Exception as inst:
                         if download_dir == config.get('directories', 'download_dir'):
                             errormessage = 'ACTION=MOVE STATUS=ERROR FILE=' + filename + ' ERROR=' + inst
-                            print timestamp(), errormessage
+                            log_output(errormessage)
                         else:
                             errormessage = 'ACTION=MOVE STATUS=ERROR FILE=' + os.path.join(download_dir, filename) + ' ERROR=' + inst
-                            print timestamp(), errormessage
+                            log_output(errormessage)
                 except Exception as inst:
                     if download_dir == config.get('directories', 'download_dir'):
                         errormessage = 'ACTION=IDENTIFY STATUS=ERROR FILE=' + filename + ' ERROR=' + inst
-                        print timestamp(), errormessage
+                        log_output(errormessage)
                     else:
                         errormessage = 'ACTION=IDENTIFY STATUS=ERROR FILE=' + os.path.join(download_dir, filename) + ' ERROR=' + inst
-                        print timestamp(), errormessage
+                        log_output(errormessage)
         lockup.close()
         os.remove(lockfile)
