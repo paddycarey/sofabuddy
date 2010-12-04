@@ -18,24 +18,6 @@
 
 import sys, re, os, shutil, string, tvrage.api, ConfigParser, time, datetime
 
-config = ConfigParser.ConfigParser()
-config.read('/etc/sofabuddy/config.cfg')
-
-try:
-    if os.path.isdir(sys.argv[1]):
-        download_dir = sys.argv[1]
-    else:
-        errormessage = 'ACTION=RunScript STATUS=ERROR ERROR=' + sys.argv[1] + ' is not a directory. Using default.'
-        log_output(errormessage)
-        download_dir = config.get('directories', 'download_dir')
-except:
-    download_dir = config.get('directories', 'download_dir')
-
-tv_dir = config.get('directories', 'tv_dir')
-nuke_dir = config.get('directories', 'nuke_dir')
-
-lockfile = '/tmp/tvwrangler_lock'
-
 def log_output(message):
     printmessage = timestamp() + ' ' + message
     logmessage = printmessage + '\n'
