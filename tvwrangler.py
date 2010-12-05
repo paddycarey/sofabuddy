@@ -88,11 +88,13 @@ def find_relink(fullnukepath, nukemoveto):
 
 def find_origfilename(fullnukepath):
 
+    filepath = 'None'
     for x in os.listdir(download_dir):
         linkpath = os.path.join(download_dir, x)
         if os.path.islink(linkpath):
             if fullnukepath == os.readlink(linkpath):
-                return x
+                filepath = x
+    return filepath
 
 def do_file_move(showid, showname, snum, enum, epname, quality, fileext, origfilename):
 
