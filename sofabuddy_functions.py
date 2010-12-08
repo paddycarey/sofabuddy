@@ -156,6 +156,8 @@ class file_operations:
                     self.nuke_reason = 'BETTERAVAIL'
                     self.episode_to_be_nuked = os.path.join(self.download_dir, self.file_name)
                     self.nuke_path_new = os.path.join(self.nuke_dir, self.file_name)
+                break
+        return [self.episode_to_be_nuked, self.nuke_path_new]
 
     def find_relink(self):
         for x in os.listdir(self.download_dir):
