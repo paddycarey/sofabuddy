@@ -186,7 +186,8 @@ class episode_details:
         self.show = tvrage.api.Show(showname)
         self.show_name = self.show.name
         self.episode = self.show.season(int(season_no)).episode(int(episode_no))
-        self.episode_title = re.sub('/', '-', self.episode.title)
+        self.episode_title = self.episode.title.encode("ascii", "replace")
+        self.episode_title = re.sub('/', '-', self.episode_title)
         self.episode_title = re.sub('\?', '-', self.episode_title)
 
 
