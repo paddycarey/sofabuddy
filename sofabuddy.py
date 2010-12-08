@@ -39,6 +39,8 @@ if __name__ == "__main__":
     nuke_dir = config.get_value('directories', 'nuke_dir')
 
     lock_file = '/tmp/tvwrangler_lock'
+    episode_count = 0
+    xbmc = sofabuddy_functions.send_xbmc_command()
 
     for o, a in opts:
         if o == "-d":
@@ -76,8 +78,13 @@ if __name__ == "__main__":
                         message = 'NUKESRC=' + nuke_info[0] + ' NUKEDST=' + nuke_info[1] + ' REASON=' + file_operations.nuke_reason
                         log.output_log(message)
                     file_operations.do_move()
+                    episode_count = episode_count + 1
                     message = 'MVSRC=' + file_operations.episode_path_old + ' MVDST=' + file_operations.episode_path_new
                     log.output_log(message)
+        if episode_count > 0:
+            xbmc.update_video_library()
+            message = 'XBMC: update_video_library()'
+            log.output_log(message)
         lock_up.close()
         os.remove(lock_file)
     else:
