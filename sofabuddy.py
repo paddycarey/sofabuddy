@@ -23,48 +23,63 @@ import getopt
 
 if __name__ == "__main__":
 
+    config = sofabuddy_functions.read_config('/etc/sofabuddy/test_config.cfg')
+    log_file = config.get_value('logging', 'log_file')
+    log = sofabuddy_functions.logging(log_file)
+
     try:
         opts, args = getopt.getopt(sys.argv[1:], "d:")
     except getopt.GetoptError, err:
-        # print help information and exit:
-        print str(err) # will print something like "option -a not recognized"
+        message = 'ERROR=sofabuddy.py: ' + str(err)
+        log.output_log(message)
         sys.exit(2) 
-
-    config = sofabuddy_functions.read_config('/etc/sofabuddy/test_config.cfg')
 
     download_dir = config.get_value('directories', 'download_dir')
     tv_dir = config.get_value('directories', 'tv_dir')
     nuke_dir = config.get_value('directories', 'nuke_dir')
 
-    log_file = config.get_value('logging', 'log_file')
+    lock_file = '/tmp/tvwrangler_lock'
 
-    log = sofabuddy_functions.logging(log_file)
+    for o, a in opts:
+        if o == "-d":
+            download_dir = a
+        else:
+            assert False, "unhandled option" 
 
-    for file_name in os.listdir(download_dir) :
-        if not os.path.islink(os.path.join(download_dir, file_name)) and not os.path.isdir(os.path.join(download_dir, file_name)):
-            file_details = sofabuddy_functions.file_details(file_name)
-            try:
-                episode_details = sofabuddy_functions.episode_details(file_details.show_name, file_details.season_no, file_details.episode_no)
-            except KeyError:
-                message = 'ERROR=Could not find show or episode on tvrage.com FILE_NAME=' + file_name
-                log.output_log(message)
-            except TypeError:
-                message = 'ERROR=Network error FILE_NAME=' + file_name
-                log.output_log(message)
-            else:
-                file_operations = sofabuddy_functions.file_operations(episode_details.show_name, file_details.season_no, file_details.episode_no, episode_details.episode_title, file_details.quality, file_details.source, file_details.extension, download_dir, tv_dir, nuke_dir, file_name)
+    try:
+        is_locked = open(lock_file)
+    except:
+        lock_up = open(lock_file,'w')
+        for file_name in os.listdir(download_dir) :
+            if not os.path.islink(os.path.join(download_dir, file_name)) and not os.path.isdir(os.path.join(download_dir, file_name)):
+                file_details = sofabuddy_functions.file_details(file_name)
                 try:
-                    nuke_info = file_operations.get_nuke_info()
-                except OSError:
-                    pass
-                except NameError:
-                    pass
-                except AttributeError:
-                    pass
-                else:
-                    file_operations.do_nuke()
-                    message = 'NUKESRC=' + nuke_info[0] + ' NUKEDST=' + nuke_info[1]
+                    episode_details = sofabuddy_functions.episode_details(file_details.show_name, file_details.season_no, file_details.episode_no)
+                except KeyError:
+                    message = 'ERROR=Could not find show or episode on tvrage.com FILE_NAME=' + file_name
                     log.output_log(message)
-                file_operations.do_move()
-                message = 'MVSRC=' + file_operations.episode_path_old + ' MVDST=' + file_operations.episode_path_new
-                log.output_log(message)
+                except TypeError:
+                    message = 'ERROR=Network error FILE_NAME=' + file_name
+                    log.output_log(message)
+                else:
+                    file_operations = sofabuddy_functions.file_operations(episode_details.show_name, file_details.season_no, file_details.episode_no, episode_details.episode_title, file_details.quality, file_details.source, file_details.extension, download_dir, tv_dir, nuke_dir, file_name)
+                    try:
+                        nuke_info = file_operations.get_nuke_info()
+                    except OSError:
+                        pass
+                    except NameError:
+                        pass
+                    except AttributeError:
+                        pass
+                    else:
+                        file_operations.do_nuke()
+                        message = 'NUKESRC=' + nuke_info[0] + ' NUKEDST=' + nuke_info[1] + ' REASON=' + file_operations.nuke_reason
+                        log.output_log(message)
+                    file_operations.do_move()
+                    message = 'MVSRC=' + file_operations.episode_path_old + ' MVDST=' + file_operations.episode_path_new
+                    log.output_log(message)
+        lock_up.close()
+        os.remove(lock_file)
+    else:
+        message = 'ERROR=sofabuddy.py is locked'
+        log.output_log(message)
