@@ -173,7 +173,7 @@ class file_operations:
     def do_move(self):
         if not os.path.isdir(self.episode_dir_new):
             os.makedirs(self.episode_dir_new)
-        if not os.path.islink(episode_path_old) and os.path.isfile(self.episode_path_old):
+        if not os.path.islink(self.episode_path_old) and os.path.isfile(self.episode_path_old):
             shutil.move(self.episode_path_old, self.episode_path_new)
             os.symlink(self.episode_path_new, self.episode_path_old)
 
