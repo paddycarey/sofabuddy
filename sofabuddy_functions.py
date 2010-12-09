@@ -69,7 +69,12 @@ class file_details:
         show_search = show_name_search_string.match(self.file_name)
         raw_show_name = show_search.group(0)
         clean_show_name = re.sub('\.', ' ', raw_show_name)
-        return string.rstrip(clean_show_name)
+        clean_show_name = re.sub('\[', ' ', clean_show_name)
+        clean_show_name = string.rstrip(clean_show_name)
+        if len(clean_show_name) > 1:
+            return clean_show_name
+        else:
+            raise AttributeError
 
     def season_episode_no(self):
         regexes = [['s[0-9][0-9]e[0-9][0-9]', 1, 3, 4, 6], ['[0-9][0-9]x[0-9][0-9]', 0, 2, 3, 5], ['[0-9]x[0-9][0-9]', 0, 1, 2, 4]]

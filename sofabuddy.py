@@ -56,17 +56,20 @@ if __name__ == "__main__":
             if not os.path.islink(os.path.join(download_dir, file_name)) and not os.path.isdir(os.path.join(download_dir, file_name)):
                 try:
                     file_details = sofabuddy_functions.file_details(file_name)
-                except AttributeError:
-                    message = 'ERROR=Could not extract required data from filename FILE=' + file_name
+                except AttributeError as inst:
+                    message = 'ERROR=Could not extract required data from filename FILE_NAME=' + file_name + ' ERRMSG=AttributeError: ' + str(inst)
                     log.output_log(message)
                 else:
                     try:
                         episode_details = sofabuddy_functions.episode_details(file_details.show_name, file_details.season_no, file_details.episode_no)
-                    except KeyError:
-                        message = 'ERROR=Could not find show or episode on tvrage.com FILE_NAME=' + file_name
+                    except KeyError as inst:
+                        message = 'ERROR=Could not find show or episode on tvrage.com FILE_NAME=' + file_name + ' ERRMSG=KeyError: ' + str(inst)
                         log.output_log(message)
-                    except TypeError:
-                        message = 'ERROR=Network error FILE_NAME=' + file_name
+                    except TypeError as inst:
+                        message = 'ERROR=Network error FILE_NAME=' + file_name + ' ERRMSG=TypeError: ' + str(inst)
+                        log.output_log(message)
+                    except AttributeError as inst:
+                        message = 'ERROR=Network error FILE_NAME=' + file_name + ' ERRMSG=AttributeError: ' + str(inst)
                         log.output_log(message)
                     else:
                         file_operations = sofabuddy_functions.file_operations(episode_details.show_name, file_details.season_no, file_details.episode_no, episode_details.episode_title, file_details.quality, file_details.source, file_details.extension, download_dir, tv_dir, nuke_dir, file_name)
