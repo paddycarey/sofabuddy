@@ -27,7 +27,7 @@ def usage():
     print '\tsofabuddy.py -d "/media/downloads" -h "192.168.1.1"'
     print "Options"
     print "\t-?, --help\t\t\tWill bring up this message"
-    print "\t-d, --download_dir\t\t\tOverride the default download directory"
+    print "\t-d, --download_dir\t\tOverride the default download directory"
     print "\t-h, --host=HOST\t\t\tChoose the ip address of your XBMC box (default=127.0.0.1)"
     pass
 
