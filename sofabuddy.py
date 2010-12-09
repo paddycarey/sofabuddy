@@ -31,6 +31,11 @@ def usage():
     print "\t-h, --host=HOST\t\t\tChoose the ip address of your XBMC box (default=127.0.0.1)"
     pass
 
+def attempt_graceful_exit():
+    lock_up.close()
+    os.remove(lock_file)
+    sys.exit(3)
+
 if __name__ == "__main__":
 
     config = sofabuddy_functions.read_config('/etc/sofabuddy/config.cfg')
@@ -80,6 +85,10 @@ if __name__ == "__main__":
                 except AttributeError as inst:
                     message = 'ERROR=Could not extract required data from filename FILE_NAME=' + file_name + ' ERRMSG=AttributeError: ' + str(inst)
                     log.output_log(message)
+                except Exception as inst:
+                    message = 'ERROR=Unknown error FILE_NAME=' + file_name + 'ERRMSG=' + str(type(inst)) + ' ' + str(inst)
+                    log.output_log(message)
+                    attempt_graceful_exit()
                 else:
                     try:
                         episode_details = sofabuddy_functions.episode_details(file_details.show_name, file_details.season_no, file_details.episode_no)
@@ -92,6 +101,10 @@ if __name__ == "__main__":
                     except AttributeError as inst:
                         message = 'ERROR=Network error FILE_NAME=' + file_name + ' ERRMSG=AttributeError: ' + str(inst)
                         log.output_log(message)
+                    except Exception as inst:
+                        message = 'ERROR=Unknown error FILE_NAME=' + file_name + 'ERRMSG=' + str(type(inst)) + ' ' + str(inst)
+                        log.output_log(message)
+                        attempt_graceful_exit()
                     else:
                         file_operations = sofabuddy_functions.file_operations(episode_details.show_name, file_details.season_no, file_details.episode_no, episode_details.episode_title, file_details.quality, file_details.source, file_details.extension, download_dir, tv_dir, nuke_dir, file_name)
                         try:
@@ -102,6 +115,10 @@ if __name__ == "__main__":
                             pass
                         except AttributeError:
                             pass
+                        except Exception as inst:
+                            message = 'ERROR=Unknown error FILE_NAME=' + file_name + 'ERRMSG=' + str(type(inst)) + ' ' + str(inst)
+                            log.output_log(message)
+                            attempt_graceful_exit()
                         else:
                             file_operations.do_nuke()
                             message = 'NUKESRC=' + nuke_info[0] + ' NUKEDST=' + nuke_info[1] + ' REASON=' + file_operations.nuke_reason
