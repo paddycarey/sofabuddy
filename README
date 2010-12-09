@@ -17,13 +17,17 @@ Usage: sofabuddy.py [options]
 Example
         sofabuddy.py -d "/media/downloads" -h "192.168.1.1"
 Options
-        -?, --help                          Will bring up this message
-        -d, --download_dir=DOWNLOAD_DIR     Override the default download directory
-        -h, --host=HOST                     Choose the ip address of your XBMC box (default=127.0.0.1)
+        -?, --help                      Will bring up this message
+        -d, --download_dir              Override the default download directory
+        -n, --nuke_dir                  Override the default nuke directory
+        -t, --tv_dir                    Override the default tv directory
+        -l, --log_file                  Choose the location for your log file (default=/tmp/sofabuddy_log)
+        -h, --host=HOST                 Choose the ip address of your XBMC box (default=127.0.0.1)
 
-You should create /etc/sofabuddy/config.cfg using example_config.cfg as an
-example.  You should define your directories in this file.
 
-You can specify a directory to scan as an argument on the command line,
-otherwise sofabuddy.py will scan the default download directory as defined in
-the config file.
+You can create /etc/sofabuddy/config.cfg using example_config.cfg as an
+example.  You can define your directories in this file.  Alternatively you can
+specify all options on the command line.
+
+sofabuddy.py will send a command to an XBMC box (remote or local) upon a
+succesful move to initiate an update of the video library.
