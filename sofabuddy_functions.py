@@ -209,7 +209,7 @@ class read_config:
 
 class send_xbmc_command:
     
-    def __init__(self, ip='127.0.0.1', port='9777'):
+    def __init__(self, ip, port):
         self.addr = (ip, port)
         self.sock = socket(AF_INET,SOCK_DGRAM)
     

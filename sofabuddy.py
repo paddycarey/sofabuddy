@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     lock_file = '/tmp/tvwrangler_lock'
     episode_count = 0
-    xbmc = sofabuddy_functions.send_xbmc_command(xbmc_ip)
+    xbmc = sofabuddy_functions.send_xbmc_command(xbmc_ip, 9777)
 
     for o, a in opts:
         if o in ("-d", "--download_dir"):
