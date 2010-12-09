@@ -77,7 +77,7 @@ class file_details:
             raise AttributeError
 
     def season_episode_no(self):
-        regexes = [['s[0-9][0-9]e[0-9][0-9]', 1, 3, 4, 6], ['[0-9][0-9]x[0-9][0-9]', 0, 2, 3, 5], ['[0-9]x[0-9][0-9]', 0, 1, 2, 4]]
+        regexes = [['s[0-9][0-9]e[0-9][0-9]', 1, 3, 4, 6], ['[0-9][0-9]x[0-9][0-9]', 0, 2, 3, 5], ['[0-9]x[0-9][0-9]', 0, 1, 2, 4], ['s[0-9][0-9] ep[0-9][0-9]', 1, 3, 6, 8]]
         for regex, season_start, season_end, episode_start, episode_end in regexes:
             results = re.search(regex, self.file_name, re.I)
             try:
