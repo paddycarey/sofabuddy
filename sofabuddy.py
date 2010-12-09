@@ -21,6 +21,16 @@ import os
 import sys
 import getopt
 
+def usage():
+    print "sofabuddy.py [options]"
+    print 'Example'
+    print '\tsofabuddy.py -d "/media/downloads" -h "192.168.1.1"'
+    print "Options"
+    print "\t-?, --help\t\t\tWill bring up this message"
+    print "\t-d, --download_dir\t\t\tOverride the default download directory"
+    print "\t-h, --host=HOST\t\t\tChoose the ip address of your XBMC box (default=127.0.0.1)"
+    pass
+
 if __name__ == "__main__":
 
     config = sofabuddy_functions.read_config('/etc/sofabuddy/config.cfg')
@@ -28,10 +38,11 @@ if __name__ == "__main__":
     log = sofabuddy_functions.logging(log_file)
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "dh:", ["download_dir=", "host="])
+        opts, args = getopt.getopt(sys.argv[1:], "?d:h:", ["help", "download_dir=", "host="])
     except getopt.GetoptError, err:
         message = 'ERROR=sofabuddy.py: ' + str(err)
         log.output_log(message)
+        usage()
         sys.exit(2) 
 
     download_dir = config.get_value('directories', 'download_dir')
@@ -48,6 +59,9 @@ if __name__ == "__main__":
     xbmc = sofabuddy_functions.send_xbmc_command(xbmc_ip, 9777)
 
     for o, a in opts:
+        if o in ("-?", "--help"):
+            usage()
+            sys.exit()
         if o in ("-d", "--download_dir"):
             download_dir = a
         elif o in ("-h", "--host"):
