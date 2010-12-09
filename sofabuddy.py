@@ -112,7 +112,7 @@ if __name__ == "__main__":
                         log.output_log(message)
         if episode_count > 0:
             xbmc.update_video_library()
-            message = 'XBMC: update_video_library()'
+            message = 'XBMC=Updating video library IP=' + xbmc_ip
             log.output_log(message)
         lock_up.close()
         os.remove(lock_file)
