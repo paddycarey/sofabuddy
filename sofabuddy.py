@@ -66,33 +66,45 @@ if __name__ == "__main__":
         config = sofabuddy_functions.read_config('/etc/sofabuddy/config.cfg')
     except:
         pass
-    else:
+
+    try:
+        log_file
+    except NameError:
         try:
-            log_file
-        except NameError:
-            try:
-                log_file = config.get_value('logging', 'log_file')
-            except:
-                log_file = '/tmp/sofabuddy_log'
+            log_file = config.get_value('logging', 'log_file')
+        except:
+            log_file = '/tmp/sofabuddy_log'
+    try:
+        download_dir
+    except NameError:
         try:
-            download_dir
-        except NameError:
             download_dir = config.get_value('directories', 'download_dir')
+        except:
+            message = 'ERROR=download_dir not set. Aborting'
+            sys.exit(3)
+    try:
+        tv_dir
+    except NameError:
         try:
-            tv_dir
-        except NameError:
             tv_dir = config.get_value('directories', 'tv_dir')
+        except:
+            message = 'ERROR=tv_dir not set. Aborting'
+            sys.exit(3)
+    try:
+        nuke_dir
+    except NameError:
         try:
-            nuke_dir
-        except NameError:
             nuke_dir = config.get_value('directories', 'nuke_dir')
+        except:
+            message = 'ERROR=nuke_dir not set. Aborting'
+            sys.exit(3)
+    try:
+        xbmc_ip
+    except NameError:
         try:
-            xbmc_ip
-        except NameError:
-            try:
-                xbmc_ip = config.get_value('xbmc', 'ip')
-            except:
-                xbmc_ip = '127.0.0.1'
+            xbmc_ip = config.get_value('xbmc', 'ip')
+        except:
+            xbmc_ip = '127.0.0.1'
 
     log = sofabuddy_functions.logging(log_file)
     lock_file = '/tmp/sofabuddy_lock'
