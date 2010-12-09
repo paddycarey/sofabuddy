@@ -1,23 +1,29 @@
 README
 
-tvwrangler.py - An auto sorter for tv episodes
+sofabuddy.py - An auto sorter for tv episodes
 
-tvwrangler.py will search a folder for all tv episodes and automatically sort
+sofabuddy.py will search a folder for all tv episodes and automatically sort
 them into the correct Show/Season/Episode hierarchy.  It will also retrieve the
 episode title from tvrage.com and rename the file to make it more readable.
 
-tvwrangler.py will also automatically handle replacing (nuking) of episodes to
+sofabuddy.py will also automatically handle replacing (nuking) of episodes to
 ensure you always have the most up to date copy of the episode.
 
 This script uses the python-tvrage api from pypi.
 
 To install the api please run "easy_install python-tvrage" as root.
 
-Usage: ./tvwrangler.py
+Usage: sofabuddy.py [options]
+Example
+        sofabuddy.py -d "/media/downloads" -h "192.168.1.1"
+Options
+        -?, --help                          Will bring up this message
+        -d, --download_dir=DOWNLOAD_DIR     Override the default download directory
+        -h, --host=HOST                     Choose the ip address of your XBMC box (default=127.0.0.1)
 
 You should create /etc/sofabuddy/config.cfg using example_config.cfg as an
 example.  You should define your directories in this file.
 
-You can specify a directory to scan by using it as the first argument on the
-command line, otherwise tvwrangler.py will scan the default download directory
-as defined in the config file.
+You can specify a directory to scan as an argument on the command line,
+otherwise sofabuddy.py will scan the default download directory as defined in
+the config file.
