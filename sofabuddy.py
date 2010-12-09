@@ -23,12 +23,12 @@ import getopt
 
 if __name__ == "__main__":
 
-    config = sofabuddy_functions.read_config('/etc/sofabuddy/test_config.cfg')
+    config = sofabuddy_functions.read_config('/etc/sofabuddy/config.cfg')
     log_file = config.get_value('logging', 'log_file')
     log = sofabuddy_functions.logging(log_file)
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "d:")
+        opts, args = getopt.getopt(sys.argv[1:], "dh:", ["download_dir=", "host="])
     except getopt.GetoptError, err:
         message = 'ERROR=sofabuddy.py: ' + str(err)
         log.output_log(message)
@@ -38,13 +38,20 @@ if __name__ == "__main__":
     tv_dir = config.get_value('directories', 'tv_dir')
     nuke_dir = config.get_value('directories', 'nuke_dir')
 
+    try:
+        xbmc_ip = config.get_value('xbmc', 'ip')
+    except:
+        xbmc_ip = '127.0.0.1'
+
     lock_file = '/tmp/tvwrangler_lock'
     episode_count = 0
-    xbmc = sofabuddy_functions.send_xbmc_command()
+    xbmc = sofabuddy_functions.send_xbmc_command(xbmc_ip)
 
     for o, a in opts:
-        if o == "-d":
+        if o in ("-d", "--download_dir"):
             download_dir = a
+        elif o in ("-h", "--host"):
+            xbmc_ip = a
         else:
             assert False, "unhandled option" 
 
