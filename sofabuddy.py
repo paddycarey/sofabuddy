@@ -28,40 +28,22 @@ def usage():
     print "Options"
     print "\t-?, --help\t\t\tWill bring up this message"
     print "\t-d, --download_dir\t\tOverride the default download directory"
+    print "\t-n, --nuke_dir\t\t\tOverride the default nuke directory"
+    print "\t-t, --tv_dir\t\t\tOverride the default tv directory"
+    print "\t-l, --log_file\t\t\tChoose the location for your log file (default=/tmp/sofabuddy_log)"
     print "\t-h, --host=HOST\t\t\tChoose the ip address of your XBMC box (default=127.0.0.1)"
     pass
 
-def attempt_graceful_exit():
-    lock_up.close()
-    os.remove(lock_file)
-    sys.exit(3)
 
 if __name__ == "__main__":
 
-    config = sofabuddy_functions.read_config('/etc/sofabuddy/config.cfg')
-    log_file = config.get_value('logging', 'log_file')
-    log = sofabuddy_functions.logging(log_file)
-
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "?d:h:", ["help", "download_dir=", "host="])
+        opts, args = getopt.getopt(sys.argv[1:], "?d:n:t:l:h:", ["help", "download_dir=", "nuke_dir=", "tv_dir=", "log_file=", "host="])
     except getopt.GetoptError, err:
         message = 'ERROR=sofabuddy.py: ' + str(err)
-        log.output_log(message)
+        print message
         usage()
         sys.exit(2) 
-
-    download_dir = config.get_value('directories', 'download_dir')
-    tv_dir = config.get_value('directories', 'tv_dir')
-    nuke_dir = config.get_value('directories', 'nuke_dir')
-
-    try:
-        xbmc_ip = config.get_value('xbmc', 'ip')
-    except:
-        xbmc_ip = '127.0.0.1'
-
-    lock_file = '/tmp/tvwrangler_lock'
-    episode_count = 0
-    xbmc = sofabuddy_functions.send_xbmc_command(xbmc_ip, 9777)
 
     for o, a in opts:
         if o in ("-?", "--help"):
@@ -69,10 +51,53 @@ if __name__ == "__main__":
             sys.exit()
         if o in ("-d", "--download_dir"):
             download_dir = a
+        elif o in ("-n", "--nuke_dir"):
+            nuke_dir = a
+        if o in ("-t", "--tv_dir"):
+            tv_dir = a
+        if o in ("-l", "--log_file"):
+            log_file = a
         elif o in ("-h", "--host"):
             xbmc_ip = a
         else:
-            assert False, "unhandled option" 
+            assert False, "unhandled option"
+
+    try:
+        config = sofabuddy_functions.read_config('/etc/sofabuddy/config.cfg')
+    except:
+        pass
+    else:
+        try:
+            log_file
+        except NameError:
+            try:
+                log_file = config.get_value('logging', 'log_file')
+            except:
+                log_file = '/tmp/sofabuddy_log'
+        try:
+            download_dir
+        except NameError:
+            download_dir = config.get_value('directories', 'download_dir')
+        try:
+            tv_dir
+        except NameError:
+            tv_dir = config.get_value('directories', 'tv_dir')
+        try:
+            nuke_dir
+        except NameError:
+            nuke_dir = config.get_value('directories', 'nuke_dir')
+        try:
+            xbmc_ip
+        except NameError:
+            try:
+                xbmc_ip = config.get_value('xbmc', 'ip')
+            except:
+                xbmc_ip = '127.0.0.1'
+
+    log = sofabuddy_functions.logging(log_file)
+    lock_file = '/tmp/sofabuddy_lock'
+    episode_count = 0
+    xbmc = sofabuddy_functions.send_xbmc_command(xbmc_ip, 9777)
 
     try:
         is_locked = open(lock_file)
@@ -88,7 +113,6 @@ if __name__ == "__main__":
                 except Exception as inst:
                     message = 'ERROR=Unknown error FILE_NAME=' + file_name + 'ERRMSG=' + str(type(inst)) + ' ' + str(inst)
                     log.output_log(message)
-                    attempt_graceful_exit()
                 else:
                     try:
                         episode_details = sofabuddy_functions.episode_details(file_details.show_name, file_details.season_no, file_details.episode_no)
@@ -104,7 +128,6 @@ if __name__ == "__main__":
                     except Exception as inst:
                         message = 'ERROR=Unknown error FILE_NAME=' + file_name + 'ERRMSG=' + str(type(inst)) + ' ' + str(inst)
                         log.output_log(message)
-                        attempt_graceful_exit()
                     else:
                         file_operations = sofabuddy_functions.file_operations(episode_details.show_name, file_details.season_no, file_details.episode_no, episode_details.episode_title, file_details.quality, file_details.source, file_details.extension, download_dir, tv_dir, nuke_dir, file_name)
                         try:
@@ -118,7 +141,6 @@ if __name__ == "__main__":
                         except Exception as inst:
                             message = 'ERROR=Unknown error FILE_NAME=' + file_name + 'ERRMSG=' + str(type(inst)) + ' ' + str(inst)
                             log.output_log(message)
-                            attempt_graceful_exit()
                         else:
                             file_operations.do_nuke()
                             message = 'NUKESRC=' + nuke_info[0] + ' NUKEDST=' + nuke_info[1] + ' REASON=' + file_operations.nuke_reason
