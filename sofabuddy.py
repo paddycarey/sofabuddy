@@ -53,9 +53,9 @@ if __name__ == "__main__":
             download_dir = a
         elif o in ("-n", "--nuke_dir"):
             nuke_dir = a
-        if o in ("-t", "--tv_dir"):
+        elif o in ("-t", "--tv_dir"):
             tv_dir = a
-        if o in ("-l", "--log_file"):
+        elif o in ("-l", "--log_file"):
             log_file = a
         elif o in ("-h", "--host"):
             xbmc_ip = a
