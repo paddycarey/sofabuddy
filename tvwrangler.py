@@ -170,6 +170,9 @@ if __name__ == "__main__":
 
     lockfile = '/tmp/tvwrangler_lock'
 
+    warnmessage = 'ACTION=WARNING MSG=tvwrangler.py is deprecated; please use sofabuddy.py'
+    log_output(warnmessage)
+
     try:
         is_locked = open(lockfile)
         errormessage = 'ACTION=RunScript STATUS=ERROR FILE=' + lockfile + ' ERROR=Locked'
