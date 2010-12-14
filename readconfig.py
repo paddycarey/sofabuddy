@@ -18,17 +18,35 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-###############################################################################
-# Import required modules
-###############################################################################
+
+#    Import required modules
+
 
 import config
 import getopt
 import sys
 
-###############################################################################
-# Parse command line options
-###############################################################################
+
+#    Function to display help message
+
+
+def usage():
+    print "sofabuddy.py [options]\n"
+    print 'Example'
+    print '\tsofabuddy.py -d "/media/downloads" -h "192.168.1.1"\n'
+    print "Options"
+    print "\t-?, --help\t\t\tWill bring up this message"
+    print "\t-d, --download_dir\t\tOverride the default download directory"
+    print "\t-n, --nuke_dir\t\t\tOverride the default nuke directory"
+    print "\t-t, --tv_dir\t\t\tOverride the default tv directory"
+    print "\t-l, --log_file\t\t\tChoose the location for your log file (default=/tmp/sofabuddy_log)"
+    print "\t-k, --lock_file\t\t\tChoose the location for your lock file (default=/tmp/sofabuddy_lock)"
+    print "\t-h, --host\t\t\tChoose the ip address of your XBMC box (default=127.0.0.1)"
+    pass
+
+
+#    Parse command line options
+
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], "?d:n:t:l:h:k:", ["help", "download_dir=", "nuke_dir=", "tv_dir=", "log_file=", "host=", "lock_file="])
@@ -57,15 +75,14 @@ for o, a in opts:
     else:
         assert False, "unhandled option"
 
-###############################################################################
-# If option has not been set explicitly on the command line then check if it
-# has been set in the config file.
-###############################################################################
 
-###############################################################################
-# These options are required and do not have a default value set. The module
-# will throw an exception if a value for these variables cannot be obtained.
-###############################################################################
+#    If option has not been set explicitly on the command line then check if it
+#    has been set in the config file.
+
+
+#    These options are required and do not have a default value set. The module
+#    will throw an exception if a value for these variables cannot be obtained.
+
 
 try:
     download_dir
@@ -82,10 +99,10 @@ try:
 except NameError:
     nuke_dir = config.nuke_dir
 
-###############################################################################
-# These values are optional and if they are not specified then default values
-# will be used.
-###############################################################################
+
+#    These values are optional and if they are not specified then default
+#    values will be used.
+
 
 try:
     xbmc_ip
@@ -111,10 +128,10 @@ except NameError:
     except NameError:
         lock_file = '/tmp/sofabuddy_lock'
 
-###############################################################################
-# Read any advanced settings from config file if set, otherwise use default
-# values
-###############################################################################
+
+#    Read any advanced settings from config file if set, otherwise use default
+#    values
+
 
 try:
     episode_number_regexes = config.episode_number_regexes
