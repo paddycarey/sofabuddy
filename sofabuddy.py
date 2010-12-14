@@ -159,8 +159,9 @@ if __name__ == "__main__":
                             log.output_log(message)
                         file_operations.do_move()
                         episode_count = episode_count + 1
-                        message = 'MVSRC=' + file_operations.episode_path_old + ' MVDST=' + file_operations.episode_path_new
-                        log.output_log(message)
+                        if os.path.isfile(file_operations.episode_path_new):
+                            message = 'MVSRC=' + file_operations.episode_path_old + ' MVDST=' + file_operations.episode_path_new
+                            log.output_log(message)
         if episode_count > 0:
             xbmc.update_video_library()
             message = 'XBMC=Updating video library IP=' + xbmc_ip
