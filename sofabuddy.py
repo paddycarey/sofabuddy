@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sofabuddy_functions
+import libsofabuddy
 import os
 import sys
 import getopt
@@ -63,7 +63,7 @@ if __name__ == "__main__":
             assert False, "unhandled option"
 
     try:
-        config = sofabuddy_functions.read_config('/etc/sofabuddy/config.cfg')
+        config = libsofabuddy.read_config('/etc/sofabuddy/config.cfg')
     except:
         pass
 
@@ -106,10 +106,10 @@ if __name__ == "__main__":
         except:
             xbmc_ip = '127.0.0.1'
 
-    log = sofabuddy_functions.logging(log_file)
+    log = libsofabuddy.logging(log_file)
     lock_file = '/tmp/sofabuddy_lock'
     episode_count = 0
-    xbmc = sofabuddy_functions.send_xbmc_command(xbmc_ip, 9777)
+    xbmc = libsofabuddy.send_xbmc_command(xbmc_ip, 9777)
 
     try:
         is_locked = open(lock_file)
@@ -118,7 +118,7 @@ if __name__ == "__main__":
         for file_name in os.listdir(download_dir) :
             if not os.path.islink(os.path.join(download_dir, file_name)) and not os.path.isdir(os.path.join(download_dir, file_name)):
                 try:
-                    file_details = sofabuddy_functions.file_details(file_name)
+                    file_details = libsofabuddy.file_details(file_name)
                 except AttributeError as inst:
                     message = 'ERROR=Could not extract required data from filename FILE_NAME=' + file_name + ' ERRMSG=AttributeError: ' + str(inst)
                     log.output_log(message)
@@ -127,7 +127,7 @@ if __name__ == "__main__":
                     log.output_log(message)
                 else:
                     try:
-                        episode_details = sofabuddy_functions.episode_details(file_details.show_name, file_details.season_no, file_details.episode_no)
+                        episode_details = libsofabuddy.episode_details(file_details.show_name, file_details.season_no, file_details.episode_no)
                     except KeyError as inst:
                         message = 'ERROR=Could not find show or episode on tvrage.com FILE_NAME=' + file_name + ' ERRMSG=KeyError: ' + str(inst)
                         log.output_log(message)
@@ -141,7 +141,7 @@ if __name__ == "__main__":
                         message = 'ERROR=Unknown error FILE_NAME=' + file_name + 'ERRMSG=' + str(type(inst)) + ' ' + str(inst)
                         log.output_log(message)
                     else:
-                        file_operations = sofabuddy_functions.file_operations(episode_details.show_name, file_details.season_no, file_details.episode_no, episode_details.episode_title, file_details.quality, file_details.source, file_details.extension, download_dir, tv_dir, nuke_dir, file_name)
+                        file_operations = libsofabuddy.file_operations(episode_details.show_name, file_details.season_no, file_details.episode_no, episode_details.episode_title, file_details.quality, file_details.source, file_details.extension, download_dir, tv_dir, nuke_dir, file_name)
                         try:
                             nuke_info = file_operations.get_nuke_info()
                         except OSError:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#    sofabuddy_functions.py - Useful functions for use in sofabuddy.py
+#    libsofabuddy.py - Useful functions for use in sofabuddy.py
 #    Copyright (C) 2010 Patrick Carey
 #
 #    This program is free software: you can redistribute it and/or modify
