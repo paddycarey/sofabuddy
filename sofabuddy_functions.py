@@ -175,7 +175,10 @@ class file_operations:
 
     def do_nuke(self):
         shutil.move(self.episode_to_be_nuked, self.nuke_path_new)
-        self.find_relink()
+        if self.nuke_reason == 'BETTERAVAIL':
+            os.symlink(self.nuke_path_new, self.episode_to_be_nuked)
+        else:
+            self.find_relink()
 
     def do_move(self):
         if not os.path.isdir(self.episode_dir_new):
