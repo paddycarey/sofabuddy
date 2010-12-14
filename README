@@ -25,9 +25,10 @@ Options
         -h, --host=HOST                 Choose the ip address of your XBMC box (default=127.0.0.1)
 
 
-You can create /etc/sofabuddy/config.cfg using example_config.cfg as an
-example.  You can define your directories in this file.  Alternatively you can
-specify all options on the command line.
+You can create /etc/sofabuddy/config.py (or place the config file in the
+script's working dir) using example_config.py as an example.  You can define
+your directories in this file.  Alternatively you can specify all options on
+the command line.
 
 sofabuddy.py will send a command to an XBMC box (remote or local) upon a
 succesful move to initiate an update of the video library.

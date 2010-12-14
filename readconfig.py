@@ -22,10 +22,14 @@
 #    Import required modules
 
 
-import config
 import getopt
 import sys
 
+try:
+    import config
+except:
+    sys.path.append('/etc/sofabuddy')
+    import config
 
 #    Function to display help message
 
@@ -109,7 +113,7 @@ try:
 except NameError:
     try:
         xbmc_ip = config.xbmc_ip
-    except NameError:
+    except AttributeError:
         xbmc_ip = '127.0.0.1'
 
 try:
@@ -117,7 +121,7 @@ try:
 except NameError:
     try:
         log_file = config.log_file
-    except NameError:
+    except AttributeError:
         log_file = '/tmp/sofabuddy_log'
     
 try:
@@ -125,7 +129,7 @@ try:
 except NameError:
     try:
         lock_file = config.lock_file
-    except NameError:
+    except AttributeError:
         lock_file = '/tmp/sofabuddy_lock'
 
 
@@ -135,5 +139,5 @@ except NameError:
 
 try:
     episode_number_regexes = config.episode_number_regexes
-except NameError:
+except AttributeError:
     episode_number_regexes = [['s[0-9][0-9]e[0-9][0-9]', 1, 3, 4, 6], ['[0-9][0-9]x[0-9][0-9]', 0, 2, 3, 5], ['[0-9]x[0-9][0-9]', 0, 1, 2, 4], ['s[0-9][0-9] ep[0-9][0-9]', 1, 3, 6, 8]]

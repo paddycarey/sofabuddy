@@ -16,98 +16,16 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 import libsofabuddy
 import os
 import sys
-import getopt
 
-def usage():
-    print "sofabuddy.py [options]"
-    print 'Example'
-    print '\tsofabuddy.py -d "/media/downloads" -h "192.168.1.1"'
-    print "Options"
-    print "\t-?, --help\t\t\tWill bring up this message"
-    print "\t-d, --download_dir\t\tOverride the default download directory"
-    print "\t-n, --nuke_dir\t\t\tOverride the default nuke directory"
-    print "\t-t, --tv_dir\t\t\tOverride the default tv directory"
-    print "\t-l, --log_file\t\t\tChoose the location for your log file (default=/tmp/sofabuddy_log)"
-    print "\t-h, --host=HOST\t\t\tChoose the ip address of your XBMC box (default=127.0.0.1)"
-    pass
-
+from readconfig import *
 
 if __name__ == "__main__":
 
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], "?d:n:t:l:h:", ["help", "download_dir=", "nuke_dir=", "tv_dir=", "log_file=", "host="])
-    except getopt.GetoptError, err:
-        message = 'ERROR=sofabuddy.py: ' + str(err)
-        print message
-        usage()
-        sys.exit(2) 
-
-    for o, a in opts:
-        if o in ("-?", "--help"):
-            usage()
-            sys.exit()
-        if o in ("-d", "--download_dir"):
-            download_dir = a
-        elif o in ("-n", "--nuke_dir"):
-            nuke_dir = a
-        elif o in ("-t", "--tv_dir"):
-            tv_dir = a
-        elif o in ("-l", "--log_file"):
-            log_file = a
-        elif o in ("-h", "--host"):
-            xbmc_ip = a
-        else:
-            assert False, "unhandled option"
-
-    try:
-        config = libsofabuddy.read_config('/etc/sofabuddy/config.cfg')
-    except:
-        pass
-
-    try:
-        log_file
-    except NameError:
-        try:
-            log_file = config.get_value('logging', 'log_file')
-        except:
-            log_file = '/tmp/sofabuddy_log'
-    try:
-        download_dir
-    except NameError:
-        try:
-            download_dir = config.get_value('directories', 'download_dir')
-        except:
-            message = 'ERROR=download_dir not set. Aborting'
-            sys.exit(3)
-    try:
-        tv_dir
-    except NameError:
-        try:
-            tv_dir = config.get_value('directories', 'tv_dir')
-        except:
-            message = 'ERROR=tv_dir not set. Aborting'
-            sys.exit(3)
-    try:
-        nuke_dir
-    except NameError:
-        try:
-            nuke_dir = config.get_value('directories', 'nuke_dir')
-        except:
-            message = 'ERROR=nuke_dir not set. Aborting'
-            sys.exit(3)
-    try:
-        xbmc_ip
-    except NameError:
-        try:
-            xbmc_ip = config.get_value('xbmc', 'ip')
-        except:
-            xbmc_ip = '127.0.0.1'
-
     log = libsofabuddy.logging(log_file)
-    lock_file = '/tmp/sofabuddy_lock'
     episode_count = 0
     xbmc = libsofabuddy.send_xbmc_command(xbmc_ip, 9777)
 
