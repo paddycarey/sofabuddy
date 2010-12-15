@@ -54,8 +54,9 @@ class logging:
 
 class file_details:
 
-    def __init__(self, file_name):
+    def __init__(self, file_name, regexes):
         self.file_name = file_name
+        self.regexes = regexes
         self.season_episode_no = self.season_episode_no()
         self.show_name = self.show_name()
         self.extension = self.extension()
@@ -76,8 +77,7 @@ class file_details:
             raise AttributeError
 
     def season_episode_no(self):
-        regexes = [['s[0-9][0-9]e[0-9][0-9]', 1, 3, 4, 6], ['[0-9][0-9]x[0-9][0-9]', 0, 2, 3, 5], ['[0-9]x[0-9][0-9]', 0, 1, 2, 4], ['s[0-9][0-9] ep[0-9][0-9]', 1, 3, 6, 8]]
-        for regex, season_start, season_end, episode_start, episode_end in regexes:
+        for regex, season_start, season_end, episode_start, episode_end in self.regexes:
             results = re.search(regex, self.file_name, re.I)
             try:
                 season_episode_no = results.group(0)

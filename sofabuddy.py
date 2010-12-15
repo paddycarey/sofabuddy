@@ -36,7 +36,7 @@ if __name__ == "__main__":
         for file_name in os.listdir(download_dir) :
             if not os.path.islink(os.path.join(download_dir, file_name)) and not os.path.isdir(os.path.join(download_dir, file_name)):
                 try:
-                    file_details = libsofabuddy.file_details(file_name)
+                    file_details = libsofabuddy.file_details(file_name, episode_number_regexes)
                 except AttributeError as inst:
                     message = 'ERROR=Could not extract required data from filename FILE_NAME=' + os.path.join(download_dir, file_name) + ' ERRMSG=AttributeError: ' + str(inst)
                     log.output_log(message)
