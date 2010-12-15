@@ -38,25 +38,25 @@ if __name__ == "__main__":
                 try:
                     file_details = libsofabuddy.file_details(file_name)
                 except AttributeError as inst:
-                    message = 'ERROR=Could not extract required data from filename FILE_NAME=' + file_name + ' ERRMSG=AttributeError: ' + str(inst)
+                    message = 'ERROR=Could not extract required data from filename FILE_NAME=' + os.path.join(download_dir, file_name) + ' ERRMSG=AttributeError: ' + str(inst)
                     log.output_log(message)
                 except Exception as inst:
-                    message = 'ERROR=Unknown error FILE_NAME=' + file_name + 'ERRMSG=' + str(type(inst)) + ' ' + str(inst)
+                    message = 'ERROR=Unknown error FILE_NAME=' + os.path.join(download_dir, file_name) + 'ERRMSG=' + str(type(inst)) + ' ' + str(inst)
                     log.output_log(message)
                 else:
                     try:
                         episode_details = libsofabuddy.episode_details(file_details.show_name, file_details.season_no, file_details.episode_no)
                     except KeyError as inst:
-                        message = 'ERROR=Could not find show or episode on tvrage.com FILE_NAME=' + file_name + ' ERRMSG=KeyError: ' + str(inst)
+                        message = 'ERROR=Could not find show or episode on tvrage.com FILE_NAME=' + os.path.join(download_dir, file_name) + ' ERRMSG=KeyError: ' + str(inst)
                         log.output_log(message)
                     except TypeError as inst:
-                        message = 'ERROR=Network error FILE_NAME=' + file_name + ' ERRMSG=TypeError: ' + str(inst)
+                        message = 'ERROR=Network error FILE_NAME=' + os.path.join(download_dir, file_name) + ' ERRMSG=TypeError: ' + str(inst)
                         log.output_log(message)
                     except AttributeError as inst:
-                        message = 'ERROR=Network error FILE_NAME=' + file_name + ' ERRMSG=AttributeError: ' + str(inst)
+                        message = 'ERROR=Network error FILE_NAME=' + os.path.join(download_dir, file_name) + ' ERRMSG=AttributeError: ' + str(inst)
                         log.output_log(message)
                     except Exception as inst:
-                        message = 'ERROR=Unknown error FILE_NAME=' + file_name + 'ERRMSG=' + str(type(inst)) + ' ' + str(inst)
+                        message = 'ERROR=Unknown error FILE_NAME=' + os.path.join(download_dir, file_name) + 'ERRMSG=' + str(type(inst)) + ' ' + str(inst)
                         log.output_log(message)
                     else:
                         file_operations = libsofabuddy.file_operations(episode_details.show_name, file_details.season_no, file_details.episode_no, episode_details.episode_title, file_details.quality, file_details.source, file_details.extension, download_dir, tv_dir, nuke_dir, file_name)
@@ -69,7 +69,7 @@ if __name__ == "__main__":
                         except AttributeError:
                             pass
                         except Exception as inst:
-                            message = 'ERROR=Unknown error FILE_NAME=' + file_name + 'ERRMSG=' + str(type(inst)) + ' ' + str(inst)
+                            message = 'ERROR=Unknown error FILE_NAME=' + os.path.join(download_dir, file_name) + 'ERRMSG=' + str(type(inst)) + ' ' + str(inst)
                             log.output_log(message)
                         else:
                             file_operations.do_nuke()
