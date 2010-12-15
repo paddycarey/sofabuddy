@@ -8,8 +8,8 @@ tv_dir = '/media/some_dir/tv_library'
 nuke_dir = '/media/some_dir/nuked'
 
 #   These variables are optional. sofabuddy will use default values if they are
-#   not set.
+#   not set.  You can uncomment each one to enable it.
 
-xbmc_ip = '127.0.0.1'
-log_file = '/tmp/sofabuddy_log'
-lock_file = '/tmp/sofabuddy_lock'
+#xbmc_ip = '127.0.0.1'
+#log_file = '/tmp/sofabuddy_log'
+#lock_file = '/tmp/sofabuddy_lock'
