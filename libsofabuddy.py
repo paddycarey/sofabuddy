@@ -16,7 +16,6 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import ConfigParser
 import datetime
 import os
 import re
@@ -198,17 +197,6 @@ class episode_details:
         self.episode_title = self.episode.title.encode("ascii", "replace")
         self.episode_title = re.sub('/', '-', self.episode_title)
         self.episode_title = re.sub('\?', '-', self.episode_title)
-
-
-class read_config:
-
-    def __init__(self, config_file):
-        self.config = ConfigParser.ConfigParser()
-        self.config.read(config_file)
-
-    def get_value(self, section, value):
-        self.config_value = self.config.get(section, value)
-        return self.config_value
 
 
 class send_xbmc_command:
