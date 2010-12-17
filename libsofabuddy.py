@@ -17,44 +17,25 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
+import logging
 import os
 import re
 import shutil
 import string
 import tvrage.api
 
+from tvrage.exceptions import *
 from socket import *
 from xbmcclient import *
 
-class logging:
-
-    def __init__(self, log_file, log_level='1', log_mode='standard', time_format='[%Y/%m/%d %H:%M:%S]'):
-        self.log_file = open(log_file,'a')
-        self.log_level = log_level
-        self.log_mode = log_mode
-        self.time_format = time_format
-
-    def timestamp(self):
-        return datetime.datetime.now().strftime(self.time_format)
-
-    def build_log_line(self):
-        self.log_line = self.timestamp() + ' ' + self.message
-        return self.log_line
-
-    def output_log(self, message):
-        self.message = message
-        if not self.log_mode == 'cron':
-            print self.build_log_line()
-        log_line = self.build_log_line() + '\n' 
-        self.log_file.write(log_line)
-
-    def close_log(self):
-        self.log_file.close()
-
+logger = logging.getLogger("sofabuddy.libsofabuddy")
 
 class file_details:
 
     def __init__(self, file_name, regexes):
+        self.logger = logging.getLogger("sofabuddy.libsofabuddy.file_details")
+        logMessage = '__init__(self, ' + file_name + ', ' + str(regexes) + ')'
+        self.logger.debug(logMessage)
         self.file_name = file_name
         self.regexes = regexes
         self.season_episode_no = self.season_episode_no()
@@ -64,6 +45,8 @@ class file_details:
         self.source = self.source()
 
     def show_name(self):
+        logMessage = 'show_name(self)'
+        self.logger.debug(logMessage)
         show_name_regex = '.*(?=%s)'
         show_name_search_string = re.compile(show_name_regex % self.season_episode_no)
         show_search = show_name_search_string.match(self.file_name)
@@ -77,6 +60,8 @@ class file_details:
             raise AttributeError
 
     def season_episode_no(self):
+        logMessage = 'season_episode_no(self)'
+        self.logger.debug(logMessage)
         for regex, season_start, season_end, episode_start, episode_end in self.regexes:
             results = re.search(regex, self.file_name, re.I)
             try:
@@ -94,10 +79,14 @@ class file_details:
                 break
 
     def extension(self):
+        logMessage = 'extension(self)'
+        self.logger.debug(logMessage)
         extension = os.path.splitext(self.file_name)
         return extension[1]
 
     def quality(self):
+        logMessage = 'quality(self)'
+        self.logger.debug(logMessage)
         results = re.search('1080p|720p', self.file_name, re.I)
         if results:
             return string.upper(results.group(0))
@@ -105,6 +94,8 @@ class file_details:
             return 'SD'
 
     def source(self):
+        logMessage = 'source(self)'
+        self.logger.debug(logMessage)
         results = re.search('bluray|brrip|hddvd|dvdrip|hdtv|pdtv|dsr|vhsrip', self.file_name, re.I)
         if results:
             return string.upper(results.group(0))
@@ -191,6 +182,9 @@ class file_operations:
 class episode_details:
 
     def __init__(self, showname, season_no, episode_no):
+        self.logger = logging.getLogger("sofabuddy.libsofabuddy.episode_details")
+        logMessage = '__init__(self, ' + showname + ', ' + season_no + ', ' + episode_no + ')'
+        self.logger.debug(logMessage)
         self.show = tvrage.api.Show(showname)
         self.show_name = self.show.name
         self.episode = self.show.season(int(season_no)).episode(int(episode_no))
@@ -202,9 +196,14 @@ class episode_details:
 class send_xbmc_command:
     
     def __init__(self, ip, port):
+        self.logger = logging.getLogger("sofabuddy.libsofabuddy.send_xbmc_command")
+        logMessage = '__init__(self, ' + ip + ', ' + str(port) + ')'
+        self.logger.debug(logMessage)
         self.addr = (ip, port)
         self.sock = socket(AF_INET,SOCK_DGRAM)
     
     def update_video_library(self):
+        logMessage = 'updateVideoLibrary' + str(self.addr)
+        self.logger.info(logMessage)
         packet = PacketACTION(actionmessage="XBMC.updatelibrary(video)", actiontype=ACTION_BUTTON)
         packet.send(self.sock, self.addr)

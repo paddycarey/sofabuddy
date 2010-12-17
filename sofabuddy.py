@@ -18,14 +18,23 @@
 
 
 import libsofabuddy
+import logging
 import os
 import sys
+import tvrage.exceptions
 
 from readconfig import *
 
 if __name__ == "__main__":
 
-    log = libsofabuddy.logging(log_file)
+    logger = logging.getLogger("sofabuddy")
+    logger.setLevel(logging.INFO)
+    fh = logging.FileHandler(log_file)
+    fh.setLevel(logging.DEBUG)
+    formatter = logging.Formatter("[%(asctime)s][%(levelname)s][%(name)s] %(message)s", "%Y/%m/%d %H:%M:%S")
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
+
     episode_count = 0
     xbmc = libsofabuddy.send_xbmc_command(xbmc_ip, 9777)
 
@@ -33,31 +42,36 @@ if __name__ == "__main__":
         is_locked = open(lock_file)
     except:
         lock_up = open(lock_file,'w')
+        message = 'Lock(' + lock_file + ')'
+        logger.debug(message)
         for file_name in os.listdir(download_dir) :
             if not os.path.islink(os.path.join(download_dir, file_name)) and not os.path.isdir(os.path.join(download_dir, file_name)):
                 try:
                     file_details = libsofabuddy.file_details(file_name, episode_number_regexes)
                 except AttributeError as inst:
-                    message = 'ERROR=Could not extract required data from filename FILE_NAME=' + os.path.join(download_dir, file_name) + ' ERRMSG=AttributeError: ' + str(inst)
-                    log.output_log(message)
+                    message = 'MetadataExtractionError(' + os.path.join(download_dir, file_name) + ')'
+                    logger.error(message)
                 except Exception as inst:
-                    message = 'ERROR=Unknown error FILE_NAME=' + os.path.join(download_dir, file_name) + 'ERRMSG=' + str(type(inst)) + ' ' + str(inst)
-                    log.output_log(message)
+                    message = 'UnknownError(' + str(type(inst)) + ' ' + str(inst) + ') path(' + os.path.join(download_dir, file_name) + ')'
+                    logger.error(message)
                 else:
                     try:
                         episode_details = libsofabuddy.episode_details(file_details.show_name, file_details.season_no, file_details.episode_no)
                     except KeyError as inst:
-                        message = 'ERROR=Could not find show or episode on tvrage.com FILE_NAME=' + os.path.join(download_dir, file_name) + ' ERRMSG=KeyError: ' + str(inst)
-                        log.output_log(message)
+                        message = 'SeasonOrEpisodeNotFound(' + file_details.show_name + ', ' + file_details.season_no + ', ' + file_details.episode_no + ') path(' + os.path.join(download_dir, file_name) + ')'
+                        logger.error(message)
                     except TypeError as inst:
-                        message = 'ERROR=Network error FILE_NAME=' + os.path.join(download_dir, file_name) + ' ERRMSG=TypeError: ' + str(inst)
-                        log.output_log(message)
+                        message = 'NetworkError(' + str(inst) + ')'
+                        logger.error(message)
                     except AttributeError as inst:
-                        message = 'ERROR=Network error FILE_NAME=' + os.path.join(download_dir, file_name) + ' ERRMSG=AttributeError: ' + str(inst)
-                        log.output_log(message)
+                        message = 'NetworkError(' + str(inst) + ')'
+                        logger.error(message)
+                    except tvrage.exceptions.ShowNotFound as inst:
+                        message = 'ShowNotFound(' + file_details.show_name + ') path(' + os.path.join(download_dir, file_name) + ')'
+                        logger.error(message)
                     except Exception as inst:
-                        message = 'ERROR=Unknown error FILE_NAME=' + os.path.join(download_dir, file_name) + 'ERRMSG=' + str(type(inst)) + ' ' + str(inst)
-                        log.output_log(message)
+                        message = 'UnknownError(' + str(type(inst)) + ' ' + str(inst) + ') path(' + os.path.join(download_dir, file_name) + ')'
+                        logger.error(message)
                     else:
                         file_operations = libsofabuddy.file_operations(episode_details.show_name, file_details.season_no, file_details.episode_no, episode_details.episode_title, file_details.quality, file_details.source, file_details.extension, download_dir, tv_dir, nuke_dir, file_name)
                         try:
@@ -69,23 +83,21 @@ if __name__ == "__main__":
                         except AttributeError:
                             pass
                         except Exception as inst:
-                            message = 'ERROR=Unknown error FILE_NAME=' + os.path.join(download_dir, file_name) + 'ERRMSG=' + str(type(inst)) + ' ' + str(inst)
-                            log.output_log(message)
+                            message = 'UnknownError(' + str(type(inst)) + ' ' + str(inst) + ') path(' + os.path.join(download_dir, file_name) + ')'
+                            logger.error(message)
                         else:
                             file_operations.do_nuke()
-                            message = 'NUKESRC=' + nuke_info[0] + ' NUKEDST=' + nuke_info[1] + ' REASON=' + file_operations.nuke_reason
-                            log.output_log(message)
+                            message = 'NukeSrc(' + nuke_info[0] + ') NukeDest(' + nuke_info[1] + ') NukeReason(' + file_operations.nuke_reason + ')'
+                            logger.info(message)
                         file_operations.do_move()
                         episode_count = episode_count + 1
                         if os.path.isfile(file_operations.episode_path_new):
-                            message = 'MVSRC=' + file_operations.episode_path_old + ' MVDST=' + file_operations.episode_path_new
-                            log.output_log(message)
+                            message = 'MoveSrc(' + file_operations.episode_path_old + ') MoveDest(' + file_operations.episode_path_new + ')'
+                            logger.info(message)
         if episode_count > 0:
             xbmc.update_video_library()
-            message = 'XBMC=Updating video library IP=' + xbmc_ip
-            log.output_log(message)
         lock_up.close()
         os.remove(lock_file)
     else:
-        message = 'ERROR=sofabuddy.py is locked'
-        log.output_log(message)
+        message = 'AlreadyLocked(' + lock_file + ')'
+        logger.error(message)
