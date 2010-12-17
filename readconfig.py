@@ -136,6 +136,11 @@ except NameError:
 #    Read any advanced settings from config file if set, otherwise use default
 #    values
 
+try:
+    rawDebugLevel = config.debugLevel
+    debugLevel = 'logging.' + rawDebugLevel
+except:
+    debugLevel = 'logging.INFO'
 
 try:
     episode_number_regexes = config.episode_number_regexes

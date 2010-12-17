@@ -32,6 +32,12 @@ nuke_dir = '/media/some_dir/nuked'
 #   Advanced config options. Only change if you know what you are doing
 ###############################################################################
 
+#   Set the logging level, possible options are:
+#   DEBUG,INFO,WARNING,ERROR,CRITICAL (Default is INFO)
+#   sofabuddy will log all messages at or above the logging level you have
+#   selected, with DEBUG being the lowest
+#debugLevel = 'INFO'
+
 #   You can add additional regexes to this list to recognise more season and
 #   episode number formats
 #episode_number_regexes = [['s[0-9][0-9]e[0-9][0-9]', 1, 3, 4, 6], ['[0-9][0-9]x[0-9][0-9]', 0, 2, 3, 5], ['[0-9]x[0-9][0-9]', 0, 1, 2, 4], ['s[0-9][0-9] ep[0-9][0-9]', 1, 3, 6, 8]]
