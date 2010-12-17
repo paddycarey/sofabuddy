@@ -36,7 +36,6 @@ if __name__ == "__main__":
     logger.addHandler(fh)
 
     episode_count = 0
-    xbmc = libsofabuddy.send_xbmc_command(xbmc_ip, 9777)
 
     try:
         is_locked = open(lock_file)
@@ -87,17 +86,15 @@ if __name__ == "__main__":
                             logger.critical(message)
                         else:
                             file_operations.do_nuke()
-                            message = 'NukeSrc(' + nuke_info[0] + ') NukeDest(' + nuke_info[1] + ') NukeReason(' + file_operations.nuke_reason + ')'
-                            logger.info(message)
                         file_operations.do_move()
                         episode_count = episode_count + 1
-                        if os.path.isfile(file_operations.episode_path_new):
-                            message = 'MoveSrc(' + file_operations.episode_path_old + ') MoveDest(' + file_operations.episode_path_new + ')'
-                            logger.info(message)
         if episode_count > 0:
+            xbmc = libsofabuddy.send_xbmc_command(xbmc_ip, 9777)
             xbmc.update_video_library()
         lock_up.close()
         os.remove(lock_file)
+        message = 'Unlock(' + lock_file + ')'
+        logger.debug(message)
     else:
         message = 'AlreadyLocked(' + lock_file + ')'
         logger.critical(message)

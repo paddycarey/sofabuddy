@@ -34,12 +34,12 @@ class file_details:
 
     def __init__(self, file_name, regexes):
         self.logger = logging.getLogger("sofabuddy.libsofabuddy.file_details")
+        logMessage = 'file_details instance initialised'
+        self.logger.debug(logMessage)
         self.file_name = file_name
         logMessage = 'file_name(' + self.file_name + ')'
         self.logger.debug(logMessage)
         self.regexes = regexes
-        logMessage = 'regexes(' + str(self.regexes) + ')'
-        self.logger.debug(logMessage)
         self.season_episode_no = self.season_episode_no()
         logMessage = 'season_episode_no(' + self.season_episode_no + ')'
         self.logger.debug(logMessage)
@@ -83,6 +83,8 @@ class file_details:
                 self.episode_no = season_episode_no[episode_start:episode_end]
                 if len(self.episode_no) == 1:
                     self.episode_no = '0' + self.episode_no
+                logMessage = 'regexMatched(' + str(regex) + ')'
+                self.logger.debug(logMessage)
                 return season_episode_no
                 break
 
@@ -108,6 +110,8 @@ class file_details:
 class file_operations:
 
     def __init__(self, show_name, season_no, episode_no, episode_title, quality, source, extension, download_dir, tv_dir, nuke_dir, file_name):
+        self.logger = logging.getLogger("sofabuddy.libsofabuddy.file_operations")
+        logMessage = 'file_operations instance initialised'
         self.show_name = show_name
         self.season_no = season_no
         self.episode_no = episode_no
@@ -162,13 +166,21 @@ class file_operations:
             if os.path.islink(link_path):
                 if self.episode_to_be_nuked == os.readlink(link_path):
                     os.unlink(link_path)
+                    logMessage = 'nukeOrigFilename(' + link_path + ')'
+                    self.logger.info(logMessage)
                     os.symlink(self.nuke_path_new, link_path)
+                    logMessage = 'symlink(' + self.nuke_path_new + ') symlinkTarget(' + link_path + ')'
+                    self.logger.info(logMessage)
                     break
 
     def do_nuke(self):
         shutil.move(self.episode_to_be_nuked, self.nuke_path_new)
+        logMessage = 'NukeSrc(' + self.episode_to_be_nuked + ') NukeDest(' + self.nuke_path_new + ') NukeReason(' + self.nuke_reason + ')'
+        self.logger.info(logMessage)
         if self.nuke_reason == 'BETTERAVAIL':
             os.symlink(self.nuke_path_new, self.episode_to_be_nuked)
+            logMessage = 'symlink(' + self.nuke_path_new + ') symlinkTarget(' + self.episode_to_be_nuked + ')'
+            self.logger.info(logMessage)
         else:
             self.find_relink()
 
@@ -178,14 +190,18 @@ class file_operations:
         if not os.path.islink(self.episode_path_old):
             if os.path.isfile(self.episode_path_old):
                 shutil.move(self.episode_path_old, self.episode_path_new)
+                logMessage = 'MoveSrc(' + self.episode_path_old + ') MoveDest(' + self.episode_path_new + ')'
+                self.logger.info(logMessage)
                 os.symlink(self.episode_path_new, self.episode_path_old)
+                logMessage = 'symlink(' + self.episode_path_old + ') symlinkTarget(' + self.episode_path_new + ')'
+                self.logger.info(logMessage)
 
 
 class episode_details:
 
     def __init__(self, showname, season_no, episode_no):
         self.logger = logging.getLogger("sofabuddy.libsofabuddy.episode_details")
-        logMessage = '__init__(self, ' + showname + ', ' + season_no + ', ' + episode_no + ')'
+        logMessage = 'episode_details instance initialised'
         self.logger.debug(logMessage)
         self.show = tvrage.api.Show(showname)
         self.show_name = self.show.name
@@ -193,12 +209,17 @@ class episode_details:
         self.episode_title = self.episode.title.encode("ascii", "replace")
         self.episode_title = re.sub('/', '-', self.episode_title)
         self.episode_title = re.sub('\?', '-', self.episode_title)
-
+        logMessage = 'show_name(' + self.show_name + ')'
+        self.logger.debug(logMessage)
+        logMessage = 'episode_title(' + self.episode_title + ')'
+        self.logger.debug(logMessage)
 
 class send_xbmc_command:
     
     def __init__(self, ip, port):
         self.logger = logging.getLogger("sofabuddy.libsofabuddy.send_xbmc_command")
+        logMessage = 'send_xbmc_command instance initialised'
+        self.logger.debug(logMessage)
         self.addr = (ip, port)
         self.sock = socket(AF_INET,SOCK_DGRAM)
     
