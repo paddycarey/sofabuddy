@@ -28,7 +28,7 @@ from readconfig import *
 if __name__ == "__main__":
 
     logger = logging.getLogger("sofabuddy")
-    logger.setLevel(debugLevel)
+    logger.setLevel(logLevel)
     fh = logging.FileHandler(log_file)
     fh.setLevel(logging.DEBUG)
     formatter = logging.Formatter("[%(asctime)s][%(levelname)s][%(name)s] %(message)s", "%Y/%m/%d %H:%M:%S")

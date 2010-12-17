@@ -54,7 +54,7 @@ def usage():
 
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "?d:n:t:l:h:k:", ["help", "download_dir=", "nuke_dir=", "tv_dir=", "log_file=", "host=", "lock_file="])
+    opts, args = getopt.getopt(sys.argv[1:], "?d:n:t:l:h:k:", ["help", "download_dir=", "nuke_dir=", "tv_dir=", "log_file=", "host=", "lock_file=", "logLevel="])
 except getopt.GetoptError, err:
     message = 'ERROR=sofabuddy.py: ' + str(err)
     print message
@@ -77,6 +77,8 @@ for o, a in opts:
         lock_file = a
     elif o in ("-h", "--host"):
         xbmc_ip = a
+    elif o == "--logLevel":
+        logLevel = a
     else:
         assert False, "unhandled option"
 
@@ -138,22 +140,22 @@ except NameError:
 #    values
 
 try:
-    debugLevel = config.debugLevel
+    logLevel = config.logLevel
 except AttributeError:
-    debugLevel = logging.INFO
+    logLevel = logging.INFO
 else:
-    if debugLevel == 'DEBUG':
-        debugLevel = logging.DEBUG
-    elif debugLevel == 'INFO':
-        debugLevel = logging.INFO
-    elif debugLevel == 'WARNING':
-        debugLevel = logging.WARNING
-    elif debugLevel == 'ERROR':
-        debugLevel = logging.ERROR
-    elif debugLevel == 'CRITICAL':
-        debugLevel = logging.CRITICAL
+    if logLevel == 'DEBUG':
+        logLevel = logging.DEBUG
+    elif logLevel == 'INFO':
+        logLevel = logging.INFO
+    elif logLevel == 'WARNING':
+        logLevel = logging.WARNING
+    elif logLevel == 'ERROR':
+        logLevel = logging.ERROR
+    elif logLevel == 'CRITICAL':
+        logLevel = logging.CRITICAL
     else:
-        debugLevel = logging.INFO
+        logLevel = logging.INFO
 
 try:
     episode_number_regexes = config.episode_number_regexes

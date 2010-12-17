@@ -34,19 +34,29 @@ class file_details:
 
     def __init__(self, file_name, regexes):
         self.logger = logging.getLogger("sofabuddy.libsofabuddy.file_details")
-        logMessage = '__init__(self, ' + file_name + ', ' + str(regexes) + ')'
-        self.logger.debug(logMessage)
         self.file_name = file_name
+        logMessage = 'file_name(' + self.file_name + ')'
+        self.logger.debug(logMessage)
         self.regexes = regexes
+        logMessage = 'regexes(' + str(self.regexes) + ')'
+        self.logger.debug(logMessage)
         self.season_episode_no = self.season_episode_no()
+        logMessage = 'season_episode_no(' + self.season_episode_no + ')'
+        self.logger.debug(logMessage)
         self.show_name = self.show_name()
+        logMessage = 'show_name(' + self.show_name + ')'
+        self.logger.debug(logMessage)
         self.extension = self.extension()
+        logMessage = 'extension(' + self.extension + ')'
+        self.logger.debug(logMessage)
         self.quality = self.quality()
+        logMessage = 'quality(' + self.quality + ')'
+        self.logger.debug(logMessage)
         self.source = self.source()
+        logMessage = 'source(' + self.source + ')'
+        self.logger.debug(logMessage)
 
     def show_name(self):
-        logMessage = 'show_name(self)'
-        self.logger.debug(logMessage)
         show_name_regex = '.*(?=%s)'
         show_name_search_string = re.compile(show_name_regex % self.season_episode_no)
         show_search = show_name_search_string.match(self.file_name)
@@ -60,8 +70,6 @@ class file_details:
             raise AttributeError
 
     def season_episode_no(self):
-        logMessage = 'season_episode_no(self)'
-        self.logger.debug(logMessage)
         for regex, season_start, season_end, episode_start, episode_end in self.regexes:
             results = re.search(regex, self.file_name, re.I)
             try:
@@ -79,14 +87,10 @@ class file_details:
                 break
 
     def extension(self):
-        logMessage = 'extension(self)'
-        self.logger.debug(logMessage)
         extension = os.path.splitext(self.file_name)
         return extension[1]
 
     def quality(self):
-        logMessage = 'quality(self)'
-        self.logger.debug(logMessage)
         results = re.search('1080p|720p', self.file_name, re.I)
         if results:
             return string.upper(results.group(0))
@@ -94,8 +98,6 @@ class file_details:
             return 'SD'
 
     def source(self):
-        logMessage = 'source(self)'
-        self.logger.debug(logMessage)
         results = re.search('bluray|brrip|hddvd|dvdrip|hdtv|pdtv|dsr|vhsrip', self.file_name, re.I)
         if results:
             return string.upper(results.group(0))
@@ -197,8 +199,6 @@ class send_xbmc_command:
     
     def __init__(self, ip, port):
         self.logger = logging.getLogger("sofabuddy.libsofabuddy.send_xbmc_command")
-        logMessage = '__init__(self, ' + ip + ', ' + str(port) + ')'
-        self.logger.debug(logMessage)
         self.addr = (ip, port)
         self.sock = socket(AF_INET,SOCK_DGRAM)
     
