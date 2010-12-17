@@ -141,7 +141,7 @@ except NameError:
 
 try:
     logLevel = config.logLevel
-except AttributeError:
+except:
     logLevel = logging.INFO
 else:
     if logLevel == 'DEBUG':
