@@ -53,7 +53,7 @@ if __name__ == "__main__":
                     logger.error(message)
                 except Exception as inst:
                     message = 'UnknownError(' + str(type(inst)) + ' ' + str(inst) + ') path(' + os.path.join(download_dir, file_name) + ')'
-                    logger.error(message)
+                    logger.critical(message)
                 else:
                     try:
                         episode_details = libsofabuddy.episode_details(file_details.show_name, file_details.season_no, file_details.episode_no)
@@ -62,16 +62,16 @@ if __name__ == "__main__":
                         logger.error(message)
                     except TypeError as inst:
                         message = 'NetworkError(' + str(inst) + ')'
-                        logger.error(message)
+                        logger.warning(message)
                     except AttributeError as inst:
                         message = 'NetworkError(' + str(inst) + ')'
-                        logger.error(message)
+                        logger.warning(message)
                     except tvrage.exceptions.ShowNotFound as inst:
                         message = 'ShowNotFound(' + file_details.show_name + ') path(' + os.path.join(download_dir, file_name) + ')'
                         logger.error(message)
                     except Exception as inst:
                         message = 'UnknownError(' + str(type(inst)) + ' ' + str(inst) + ') path(' + os.path.join(download_dir, file_name) + ')'
-                        logger.error(message)
+                        logger.critical(message)
                     else:
                         file_operations = libsofabuddy.file_operations(episode_details.show_name, file_details.season_no, file_details.episode_no, episode_details.episode_title, file_details.quality, file_details.source, file_details.extension, download_dir, tv_dir, nuke_dir, file_name)
                         try:
@@ -84,7 +84,7 @@ if __name__ == "__main__":
                             pass
                         except Exception as inst:
                             message = 'UnknownError(' + str(type(inst)) + ' ' + str(inst) + ') path(' + os.path.join(download_dir, file_name) + ')'
-                            logger.error(message)
+                            logger.critical(message)
                         else:
                             file_operations.do_nuke()
                             message = 'NukeSrc(' + nuke_info[0] + ') NukeDest(' + nuke_info[1] + ') NukeReason(' + file_operations.nuke_reason + ')'
@@ -100,4 +100,4 @@ if __name__ == "__main__":
         os.remove(lock_file)
     else:
         message = 'AlreadyLocked(' + lock_file + ')'
-        logger.error(message)
+        logger.critical(message)

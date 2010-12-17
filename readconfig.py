@@ -23,6 +23,7 @@
 
 
 import getopt
+import logging
 import sys
 
 try:
@@ -137,10 +138,22 @@ except NameError:
 #    values
 
 try:
-    rawDebugLevel = config.debugLevel
-    debugLevel = 'logging.' + rawDebugLevel
-except:
-    debugLevel = 'logging.INFO'
+    debugLevel = config.debugLevel
+except AttributeError:
+    debugLevel = logging.INFO
+else:
+    if debugLevel == 'DEBUG':
+        debugLevel = logging.DEBUG
+    elif debugLevel == 'INFO':
+        debugLevel = logging.INFO
+    elif debugLevel == 'WARNING':
+        debugLevel = logging.WARNING
+    elif debugLevel == 'ERROR':
+        debugLevel = logging.ERROR
+    elif debugLevel == 'CRITICAL':
+        debugLevel = logging.CRITICAL
+    else:
+        debugLevel = logging.INFO
 
 try:
     episode_number_regexes = config.episode_number_regexes
