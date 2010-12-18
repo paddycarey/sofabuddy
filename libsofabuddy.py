@@ -167,10 +167,10 @@ class file_operations:
                 if self.episode_to_be_nuked == os.readlink(link_path):
                     os.unlink(link_path)
                     logMessage = 'nukeOrigFilename(' + link_path + ')'
-                    self.logger.info(logMessage)
+                    self.logger.debug(logMessage)
                     os.symlink(self.nuke_path_new, link_path)
                     logMessage = 'symlink(' + self.nuke_path_new + ') symlinkTarget(' + link_path + ')'
-                    self.logger.info(logMessage)
+                    self.logger.debug(logMessage)
                     break
 
     def do_nuke(self):
@@ -180,7 +180,7 @@ class file_operations:
         if self.nuke_reason == 'BETTERAVAIL':
             os.symlink(self.nuke_path_new, self.episode_to_be_nuked)
             logMessage = 'symlink(' + self.nuke_path_new + ') symlinkTarget(' + self.episode_to_be_nuked + ')'
-            self.logger.info(logMessage)
+            self.logger.debug(logMessage)
         else:
             self.find_relink()
 
@@ -194,7 +194,7 @@ class file_operations:
                 self.logger.info(logMessage)
                 os.symlink(self.episode_path_new, self.episode_path_old)
                 logMessage = 'symlink(' + self.episode_path_old + ') symlinkTarget(' + self.episode_path_new + ')'
-                self.logger.info(logMessage)
+                self.logger.debug(logMessage)
 
 
 class episode_details:
@@ -225,6 +225,6 @@ class send_xbmc_command:
     
     def update_video_library(self):
         logMessage = 'updateVideoLibrary' + str(self.addr)
-        self.logger.info(logMessage)
+        self.logger.debug(logMessage)
         packet = PacketACTION(actionmessage="XBMC.updatelibrary(video)", actiontype=ACTION_BUTTON)
         packet.send(self.sock, self.addr)

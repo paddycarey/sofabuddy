@@ -23,20 +23,20 @@ nuke_dir = '/media/some_dir/nuked'
 #xbmc_ip = '127.0.0.1'
 
 #   The location of the sofabuddy log file
-#log_file = '/tmp/sofabuddy_log'
+#log_file = '/tmp/sofabuddy.log'
 
 #   The location of the sofabuddy lock file
-#lock_file = '/tmp/sofabuddy_lock'
+#lock_file = '/tmp/sofabuddy.lock'
 
 ###############################################################################
 #   Advanced config options. Only change if you know what you are doing
 ###############################################################################
 
-#   Set the logging level, possible options are:
-#   DEBUG,INFO,WARNING,ERROR,CRITICAL (Default is INFO)
-#   sofabuddy will log all messages at or above the logging level you have
-#   selected, with DEBUG being the lowest
-#logLevel = 'INFO'
+#   Turn debug logging on by uncommenting this variable
+#debugLogging = 1
+
+#You can set the location of your debug log by modifying this string
+#debugLogfile = '/tmp/sofabuddy.debug.log'
 
 #   You can add additional regexes to this list to recognise more season and
 #   episode number formats

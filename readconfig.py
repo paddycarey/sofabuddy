@@ -120,6 +120,22 @@ except NameError:
         xbmc_ip = '127.0.0.1'
 
 try:
+    debugLogging
+except NameError:
+    try:
+        debugLogging = config.debugLogging
+    except AttributeError:
+        debugLogging = 0
+
+try:
+    debugLogfile
+except NameError:
+    try:
+        debugLogfile = config.debugLogfile
+    except AttributeError:
+        debugLogfile = '/tmp/sofabuddy.debug.log'
+
+try:
     log_file
 except NameError:
     try:
@@ -138,24 +154,6 @@ except NameError:
 
 #    Read any advanced settings from config file if set, otherwise use default
 #    values
-
-try:
-    logLevel = config.logLevel
-except:
-    logLevel = logging.INFO
-else:
-    if logLevel == 'DEBUG':
-        logLevel = logging.DEBUG
-    elif logLevel == 'INFO':
-        logLevel = logging.INFO
-    elif logLevel == 'WARNING':
-        logLevel = logging.WARNING
-    elif logLevel == 'ERROR':
-        logLevel = logging.ERROR
-    elif logLevel == 'CRITICAL':
-        logLevel = logging.CRITICAL
-    else:
-        logLevel = logging.INFO
 
 try:
     episode_number_regexes = config.episode_number_regexes

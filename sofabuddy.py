@@ -28,12 +28,19 @@ from readconfig import *
 if __name__ == "__main__":
 
     logger = logging.getLogger("sofabuddy")
-    logger.setLevel(logLevel)
+    logger.setLevel(logging.DEBUG)
     fh = logging.FileHandler(log_file)
-    fh.setLevel(logging.DEBUG)
-    formatter = logging.Formatter("[%(asctime)s][%(levelname)s][%(name)s] %(message)s", "%Y/%m/%d %H:%M:%S")
+    fh.setLevel(logging.INFO)
+    formatter = logging.Formatter("[%(asctime)s][%(levelname)s] %(message)s", "%Y/%m/%d %H:%M:%S")
     fh.setFormatter(formatter)
     logger.addHandler(fh)
+
+    if debugLogging:
+        debugfh = logging.FileHandler(debugLogfile)
+        debugfh.setLevel(logging.DEBUG)
+        debugFormatter = logging.Formatter("[%(asctime)s][%(levelname)s][%(name)s] %(message)s", "%Y/%m/%d %H:%M:%S")
+        debugfh.setFormatter(debugFormatter)
+        logger.addHandler(debugfh)
 
     episode_count = 0
 
