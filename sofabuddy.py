@@ -66,9 +66,6 @@ if __name__ == "__main__":
                     except KeyError as inst:
                         message = 'SeasonOrEpisodeNotFound(' + file_details.show_name + ', ' + file_details.season_no + ', ' + file_details.episode_no + ') path(' + os.path.join(download_dir, file_name) + ')'
                         logger.error(message)
-                    except TypeError as inst:
-                        message = 'NetworkError(' + str(inst) + ')'
-                        logger.warning(message)
                     except AttributeError as inst:
                         message = 'NetworkError(' + str(inst) + ')'
                         logger.warning(message)

@@ -54,7 +54,7 @@ def usage():
 
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "?d:n:t:l:h:k:", ["help", "download_dir=", "nuke_dir=", "tv_dir=", "log_file=", "host=", "lock_file=", "logLevel="])
+    opts, args = getopt.getopt(sys.argv[1:], "?d:n:t:l:h:k:", ["help", "download_dir=", "nuke_dir=", "tv_dir=", "log_file=", "host=", "lock_file="])
 except getopt.GetoptError, err:
     message = 'ERROR=sofabuddy.py: ' + str(err)
     print message
@@ -77,8 +77,6 @@ for o, a in opts:
         lock_file = a
     elif o in ("-h", "--host"):
         xbmc_ip = a
-    elif o == "--logLevel":
-        logLevel = a
     else:
         assert False, "unhandled option"
 
@@ -88,7 +86,7 @@ for o, a in opts:
 
 
 #    These options are required and do not have a default value set. The module
-#    will throw an exception if a value for these variables cannot be obtained.
+#    will raise an exception if a value for these variables cannot be obtained.
 
 
 try:
@@ -141,7 +139,7 @@ except NameError:
     try:
         log_file = config.log_file
     except AttributeError:
-        log_file = '/tmp/sofabuddy_log'
+        log_file = '/tmp/sofabuddy.log'
     
 try:
     lock_file
@@ -149,7 +147,7 @@ except NameError:
     try:
         lock_file = config.lock_file
     except AttributeError:
-        lock_file = '/tmp/sofabuddy_lock'
+        lock_file = '/tmp/sofabuddy.lock'
 
 
 #    Read any advanced settings from config file if set, otherwise use default
