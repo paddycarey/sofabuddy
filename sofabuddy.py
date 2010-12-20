@@ -55,7 +55,7 @@ if __name__ == "__main__":
                 try:
                     file_details = libsofabuddy.file_details(file_name, episode_number_regexes)
                 except AttributeError as inst:
-                    message = 'MetadataExtractionError(' + os.path.join(download_dir, file_name) + ')'
+                    message = 'MetadataExtractionError=\"' + os.path.join(download_dir, file_name) + '\"'
                     logger.error(message)
                 except Exception as inst:
                     message = 'UnknownError(' + str(type(inst)) + ' ' + str(inst) + ') path(' + os.path.join(download_dir, file_name) + ')'
