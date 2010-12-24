@@ -33,10 +33,10 @@ nuke_dir = '/media/some_dir/nuked'
 ###############################################################################
 
 #   Turn debug logging on by uncommenting this variable
-#debugLogging = 1
+#debug_logging = 1
 
 #   You can set the location of your debug log by modifying this string
-#debugLogfile = '/tmp/sofabuddy.debug.log'
+#debug_logfile = '/tmp/sofabuddy.debug.log'
 
 #   You can modify the format of your output filenames by editing the string
 #   below.  Possible values are:
@@ -47,7 +47,7 @@ nuke_dir = '/media/some_dir/nuked'
 #   ${quality} =  Quality of the file e.g. SD, 720P or 1080P
 #   ${source} = Source of the file e.g. HDTV, BluRay, DSRip etc.
 #   ${extension} = File extension e.g. mkv, avi, m2ts etc.
-#newFilenameFormat = '[${seasonNumber}x${episodeNumber}] ${episodeTitle} [${quality}][${source}].${extension}'
+#new_filename_format = '[${seasonNumber}x${episodeNumber}] ${episodeTitle} [${quality}][${source}].${extension}'
 
 #   You can add additional regexes to this list to recognise more season and
 #   episode number formats

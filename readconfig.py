@@ -118,20 +118,20 @@ except NameError:
         xbmc_ip = '127.0.0.1'
 
 try:
-    debugLogging
+    debug_logging
 except NameError:
     try:
-        debugLogging = config.debugLogging
+        debug_logging = config.debug_logging
     except AttributeError:
-        debugLogging = 0
+        debug_logging = 0
 
 try:
-    debugLogfile
+    debug_logfile
 except NameError:
     try:
-        debugLogfile = config.debugLogfile
+        debug_logfile = config.debug_logfile
     except AttributeError:
-        debugLogfile = '/tmp/sofabuddy.debug.log'
+        debug_logfile = '/tmp/sofabuddy.debug.log'
 
 try:
     log_file
@@ -140,7 +140,7 @@ except NameError:
         log_file = config.log_file
     except AttributeError:
         log_file = '/tmp/sofabuddy.log'
-    
+
 try:
     lock_file
 except NameError:
@@ -149,6 +149,21 @@ except NameError:
     except AttributeError:
         lock_file = '/tmp/sofabuddy.lock'
 
+try:
+    sleep_time
+except NameError:
+    try:
+        sleep_time = config.sleep_time
+    except AttributeError:
+        sleep_time = 600
+
+try:
+    recursive
+except NameError:
+    try:
+        recursive = config.recursive
+    except AttributeError:
+        recursive = False
 
 #    Read any advanced settings from config file if set, otherwise use default
 #    values

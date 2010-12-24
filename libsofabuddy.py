@@ -20,6 +20,7 @@ import datetime
 import logging
 import os
 import re
+import sb_exceptions
 import shutil
 import string
 import tvrage.api
@@ -37,23 +38,26 @@ class file_details:
         logMessage = 'file_details instance initialised'
         self.logger.debug(logMessage)
         self.file_name = file_name
-        logMessage = 'file_name(' + self.file_name + ')'
+        logMessage = 'file_name=\"' + self.file_name + '\"'
         self.logger.debug(logMessage)
         self.regexes = regexes
         self.season_episode_no = self.season_episode_no()
-        logMessage = 'season_episode_no(' + self.season_episode_no + ')'
+        try:
+            logMessage = 'season_episode_no=\"' + self.season_episode_no + '\"'
+        except TypeError:
+            raise sb_exceptions.SeasonOrEpisodeNoNotFound(self.file_name)
         self.logger.debug(logMessage)
         self.show_name = self.show_name()
-        logMessage = 'show_name(' + self.show_name + ')'
+        logMessage = 'show_name=\"' + self.show_name + '\"'
         self.logger.debug(logMessage)
         self.extension = self.extension()
-        logMessage = 'extension(' + self.extension + ')'
+        logMessage = 'extension=\"' + self.extension + '\"'
         self.logger.debug(logMessage)
         self.quality = self.quality()
-        logMessage = 'quality(' + self.quality + ')'
+        logMessage = 'quality=\"' + self.quality + '\"'
         self.logger.debug(logMessage)
         self.source = self.source()
-        logMessage = 'source(' + self.source + ')'
+        logMessage = 'source=\"' + self.source + '\"'
         self.logger.debug(logMessage)
 
     def show_name(self):
@@ -67,7 +71,7 @@ class file_details:
         if len(clean_show_name) > 1:
             return clean_show_name
         else:
-            raise AttributeError
+            raise sb_exceptions.ShowNameNotFound(self.file_name)
 
     def season_episode_no(self):
         for regex, season_start, season_end, episode_start, episode_end in self.regexes:
@@ -83,7 +87,7 @@ class file_details:
                 self.episode_no = season_episode_no[episode_start:episode_end]
                 if len(self.episode_no) == 1:
                     self.episode_no = '0' + self.episode_no
-                logMessage = 'regexMatched(' + str(regex) + ')'
+                logMessage = 'regex_matched=\"' + str(regex) + '\"'
                 self.logger.debug(logMessage)
                 return season_episode_no
                 break
@@ -166,21 +170,21 @@ class file_operations:
             if os.path.islink(link_path):
                 if self.episode_to_be_nuked == os.readlink(link_path):
                     os.unlink(link_path)
-                    logMessage = 'nukeOrigFilename(' + link_path + ')'
+                    logMessage = 'nukeOrigFilename=\"' + link_path + '\"'
                     self.logger.debug(logMessage)
                     os.symlink(self.nuke_path_new, link_path)
-                    logMessage = 'symlink(' + self.nuke_path_new + ') symlinkTarget(' + link_path + ')'
-                    self.logger.debug(logMessage)
                     break
 
     def do_nuke(self):
         shutil.move(self.episode_to_be_nuked, self.nuke_path_new)
-        logMessage = 'NukeSrc(' + self.episode_to_be_nuked + ') NukeDest(' + self.nuke_path_new + ') NukeReason(' + self.nuke_reason + ')'
+        logMessage = 'NukeSrc=\"' + self.episode_to_be_nuked + '\"'
+        self.logger.info(logMessage)
+        logMessage = 'NukeDest=\"' + self.nuke_path_new + '\"'
+        self.logger.info(logMessage)
+        logMessage = 'NukeReason=\"' + self.nuke_reason + '\"'
         self.logger.info(logMessage)
         if self.nuke_reason == 'BETTERAVAIL':
             os.symlink(self.nuke_path_new, self.episode_to_be_nuked)
-            logMessage = 'symlink(' + self.nuke_path_new + ') symlinkTarget(' + self.episode_to_be_nuked + ')'
-            self.logger.debug(logMessage)
         else:
             self.find_relink()
 
@@ -190,11 +194,11 @@ class file_operations:
         if not os.path.islink(self.episode_path_old):
             if os.path.isfile(self.episode_path_old):
                 shutil.move(self.episode_path_old, self.episode_path_new)
-                logMessage = 'MoveSrc(' + self.episode_path_old + ') MoveDest(' + self.episode_path_new + ')'
+                logMessage = 'MoveSrc=\"' + self.episode_path_old + '\"'
+                self.logger.info(logMessage)
+                logMessage = 'MoveDest=\"' + self.episode_path_new + '\"'
                 self.logger.info(logMessage)
                 os.symlink(self.episode_path_new, self.episode_path_old)
-                logMessage = 'symlink(' + self.episode_path_old + ') symlinkTarget(' + self.episode_path_new + ')'
-                self.logger.debug(logMessage)
 
 
 class episode_details:
@@ -209,22 +213,22 @@ class episode_details:
         self.episode_title = self.episode.title.encode("ascii", "replace")
         self.episode_title = re.sub('/', '-', self.episode_title)
         self.episode_title = re.sub('\?', '-', self.episode_title)
-        logMessage = 'show_name(' + self.show_name + ')'
+        logMessage = 'show_name=\"' + self.show_name + '\"'
         self.logger.debug(logMessage)
-        logMessage = 'episode_title(' + self.episode_title + ')'
+        logMessage = 'episode_title=\"' + self.episode_title + '\"'
         self.logger.debug(logMessage)
 
 class send_xbmc_command:
-    
+
     def __init__(self, ip, port):
         self.logger = logging.getLogger("sofabuddy.libsofabuddy.send_xbmc_command")
         logMessage = 'send_xbmc_command instance initialised'
         self.logger.debug(logMessage)
         self.addr = (ip, port)
         self.sock = socket(AF_INET,SOCK_DGRAM)
-    
+
     def update_video_library(self):
-        logMessage = 'updateVideoLibrary' + str(self.addr)
+        logMessage = 'updateVideoLibrary=\"' + str(self.addr) + '\"'
         self.logger.debug(logMessage)
         packet = PacketACTION(actionmessage="XBMC.updatelibrary(video)", actiontype=ACTION_BUTTON)
         packet.send(self.sock, self.addr)
