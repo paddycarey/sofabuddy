@@ -32,6 +32,7 @@ class sofabuddy:
     def __init__(self):
         self.logger = logging.getLogger("sofabuddy")
         self.logger.setLevel(logging.DEBUG)
+
         fh = logging.FileHandler(readconfig.log_file)
         fh.setLevel(logging.INFO)
         formatter = logging.Formatter("[%(asctime)s][%(levelname)s] %(message)s", "%Y/%m/%d %H:%M:%S")
@@ -39,7 +40,7 @@ class sofabuddy:
         self.logger.addHandler(fh)
 
         ch = logging.StreamHandler()
-        ch.setLevel(logging.WARNING)
+        ch.setLevel(logging.INFO)
         consoleFormatter = logging.Formatter("[%(asctime)s][%(levelname)s][%(name)s] %(message)s", "%Y/%m/%d %H:%M:%S")
         ch.setFormatter(consoleFormatter)
         self.logger.addHandler(ch)
