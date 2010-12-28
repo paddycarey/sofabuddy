@@ -177,12 +177,10 @@ class file_operations:
 
     def do_nuke(self):
         shutil.move(self.episode_to_be_nuked, self.nuke_path_new)
-        logMessage = 'NukeSrc=\"' + self.episode_to_be_nuked + '\"'
+        logMessage = 'Nuked \"' + self.episode_to_be_nuked + '\" Reason \"' + self.nuke_reason + '\"'
         self.logger.info(logMessage)
-        logMessage = 'NukeDest=\"' + self.nuke_path_new + '\"'
-        self.logger.info(logMessage)
-        logMessage = 'NukeReason=\"' + self.nuke_reason + '\"'
-        self.logger.info(logMessage)
+        logMessage = 'NukeDest \"' + self.nuke_path_new + '\"'
+        self.logger.debug(logMessage)
         if self.nuke_reason == 'BETTERAVAIL':
             os.symlink(self.nuke_path_new, self.episode_to_be_nuked)
         else:
