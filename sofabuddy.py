@@ -41,7 +41,7 @@ class sofabuddy:
 
         ch = logging.StreamHandler()
         ch.setLevel(logging.INFO)
-        consoleFormatter = logging.Formatter("[%(asctime)s][%(levelname)s][%(name)s] %(message)s", "%Y/%m/%d %H:%M:%S")
+        consoleFormatter = logging.Formatter("[%(asctime)s][%(levelname)s] %(message)s", "%Y/%m/%d %H:%M:%S")
         ch.setFormatter(consoleFormatter)
         self.logger.addHandler(ch)
 
