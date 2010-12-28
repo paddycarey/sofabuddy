@@ -194,7 +194,7 @@ class file_operations:
         if not os.path.islink(self.episode_path_old):
             if os.path.isfile(self.episode_path_old):
                 shutil.move(self.episode_path_old, self.episode_path_new)
-                logMessage = 'Processed \"' + self.episode_path_old + '\" Show Name \"' + self.show_name + '\" Episode \"' + self.season_no + 'x' + self.episode_no + '\" Quality \"' + self.quality + '\"'
+                logMessage = 'Processed \"' + self.episode_path_old + '\" Show Name \"' + self.show_name + '\" Episode \"' + self.season_no + 'x' + self.episode_no + ' ' + self.episode_title '\" Quality \"' + self.quality + '\"'
                 self.logger.info(logMessage)
                 os.symlink(self.episode_path_new, self.episode_path_old)
 
