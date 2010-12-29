@@ -81,8 +81,12 @@ class file_details:
             except:
                 pass
             else:
-                self.season_no = season_episode_no[season_start:season_end]
-                if len(self.season_no) == 1:
+				if season_episode_no == '720':
+					raise sb_exceptions.SeasonOrEpisodeNoNotFound(self.file_name)
+				if season_episode_no == '1080':
+					raise sb_exceptions.SeasonOrEpisodeNoNotFound(self.file_name)
+				self.season_no = season_episode_no[season_start:season_end]
+				if len(self.season_no) == 1:
                     self.season_no = '0' + self.season_no
                 self.episode_no = season_episode_no[episode_start:episode_end]
                 if len(self.episode_no) == 1:
