@@ -153,7 +153,7 @@ if __name__ == "__main__":
             except KeyboardInterrupt:
                 lock_up.close()
                 os.remove(readconfig.lock_file)
-                message = 'Unlocking sofabuddy.py \"' + readconfig.lock_file + '\"'
+                message = 'Unlocking sofabuddy.py: KeyboardInterrupt'
                 sb.logger.debug(message)
                 sys.exit(2)
             except:
