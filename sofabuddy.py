@@ -80,11 +80,18 @@ class sofabuddy:
                 self.manage_log_spam(download_dir, file_name, error_string, message)
                 message = 'KeyError=\"' + file_details.show_name + ' ' + file_details.season_no + 'x' + file_details.episode_no + '\"'
                 self.manage_log_spam(download_dir, file_name, error_string, message)
-            except AttributeError as inst:
+            except (AttributeError, IncompleteRead) as inst:
                 message = 'Could not retrieve data for \"' + file_details.show_name + ' ' + file_details.season_no + 'x' + file_details.episode_no + '\"'
                 error_string = str(type(inst)) + str(inst)
                 self.manage_log_spam(download_dir, file_name, error_string, message)
                 message = 'NetworkError=\"' + str(inst) + '\"'
+                self.manage_log_spam(download_dir, file_name, error_string, message)
+            except TypeError as inst:
+                message = 'Found show but not season on tvrage.com \"' + file_details.show_name + '\"'
+                error_string = str(type(inst)) + str(inst)
+                self.manage_log_spam(download_dir, file_name, error_string, message)
+                message = 'SeasonNotFound=\"' + file_details.show_name + '\"'
+                error_string = str(type(inst)) + str(inst)
                 self.manage_log_spam(download_dir, file_name, error_string, message)
             except tvrage.exceptions.ShowNotFound as inst:
                 message = 'Could not find show on tvrage.com \"' + file_details.show_name + '\"'
