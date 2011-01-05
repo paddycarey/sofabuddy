@@ -26,6 +26,7 @@ import sys
 import time
 import tvrage.exceptions
 
+from httplib import IncompleteRead
 
 class sofabuddy:
 
