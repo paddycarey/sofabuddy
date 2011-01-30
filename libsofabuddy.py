@@ -145,27 +145,31 @@ class file_operations:
         for nukefile in os.listdir(self.episode_dir_new):
             XXxXX = self.season_no + 'x' + self.episode_no
             if nukefile.find(XXxXX) > 0:
-                self.episode_to_be_nuked = os.path.join(self.episode_dir_new, nukefile)
-                self.nuke_file_name_new = ''
-                for x in os.listdir(self.download_dir):
-                    link_path = os.path.join(self.download_dir, x)
-                    if os.path.islink(link_path):
-                        if self.episode_to_be_nuked == os.readlink(link_path):
-                            self.nuke_file_name_new = x
-                if self.nuke_file_name_new == '':
-                    self.nuke_file_name_new = nukefile
-                self.nuke_path_new = os.path.join(self.nuke_dir, self.nuke_file_name_new)
-                if self.quality == '1080P':
-                    self.nuke_reason = 'NEWIS1080P'
-                elif self.quality == '720P' and nukefile.find('1080P') < 0:
-                    self.nuke_reason = 'NEWIS720P'
-                elif nukefile.find('1080P') < 0 and nukefile.find('720P') < 0:
-                    self.nuke_reason = 'NEWERDL'
-                else:
-                    self.nuke_reason = 'BETTERAVAIL'
-                    self.episode_to_be_nuked = os.path.join(self.download_dir, self.file_name)
-                    self.nuke_path_new = os.path.join(self.nuke_dir, self.file_name)
-                break
+		extension = os.path.splitext(nukefile)
+		if extension == '.nfo' or extension == '.tbn' or extension == '.jpg':
+			pass
+		else:
+	                self.episode_to_be_nuked = os.path.join(self.episode_dir_new, nukefile)
+        	        self.nuke_file_name_new = ''
+        	        for x in os.listdir(self.download_dir):
+        	            link_path = os.path.join(self.download_dir, x)
+        	            if os.path.islink(link_path):
+        	                if self.episode_to_be_nuked == os.readlink(link_path):
+        	                    self.nuke_file_name_new = x
+        	        if self.nuke_file_name_new == '':
+        	            self.nuke_file_name_new = nukefile
+        	        self.nuke_path_new = os.path.join(self.nuke_dir, self.nuke_file_name_new)
+        	        if self.quality == '1080P':
+        	            self.nuke_reason = 'NEWIS1080P'
+        	        elif self.quality == '720P' and nukefile.find('1080P') < 0:
+        	            self.nuke_reason = 'NEWIS720P'
+        	        elif nukefile.find('1080P') < 0 and nukefile.find('720P') < 0:
+        	            self.nuke_reason = 'NEWERDL'
+        	        else:
+        	            self.nuke_reason = 'BETTERAVAIL'
+        	            self.episode_to_be_nuked = os.path.join(self.download_dir, self.file_name)
+        	            self.nuke_path_new = os.path.join(self.nuke_dir, self.file_name)
+        	        break
         return [self.episode_to_be_nuked, self.nuke_path_new]
 
     def find_relink(self):
