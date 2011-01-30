@@ -108,7 +108,7 @@ class file_details:
             return 'SD'
 
     def source(self):
-        results = re.search('bluray|brrip|hddvd|dvdrip|hdtv|pdtv|dsr|vhsrip', self.file_name, re.I)
+        results = re.search('bluray|brrip|bdrip|hddvd|dvdrip|hdtv|pdtv|dsr|vhsrip', self.file_name, re.I)
         if results:
             return string.upper(results.group(0))
         else:
