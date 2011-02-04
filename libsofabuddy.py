@@ -146,7 +146,11 @@ class file_operations:
             XXxXX = self.season_no + 'x' + self.episode_no
             if nukefile.find(XXxXX) > 0:
 		extension = os.path.splitext(nukefile)
-		if extension == '.nfo' or extension == '.tbn' or extension == '.jpg':
+		if extension == '.nfo':
+			pass
+		elif extension == '.tbn':
+			pass
+		elif extension == '.jpg':
 			pass
 		else:
 	                self.episode_to_be_nuked = os.path.join(self.episode_dir_new, nukefile)
