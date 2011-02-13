@@ -145,7 +145,7 @@ class file_operations:
         for nukefile in os.listdir(self.episode_dir_new):
             XXxXX = self.season_no + 'x' + self.episode_no
             if nukefile.find(XXxXX) > 0:
-		extension = os.path.splitext(nukefile)
+		extension = os.path.splitext(nukefile)[1]
 		if extension == '.nfo':
 			pass
 		elif extension == '.tbn':
