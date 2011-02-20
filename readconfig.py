@@ -155,7 +155,7 @@ except NameError:
     try:
         sleep_time = config.sleep_time
     except AttributeError:
-        sleep_time = 600
+        sleep_time = 900
 
 try:
     recursive
