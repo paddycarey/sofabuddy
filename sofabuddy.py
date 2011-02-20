@@ -124,6 +124,19 @@ class sofabuddy:
             xbmc = libsofabuddy.send_xbmc_command(readconfig.xbmc_ip, 9777)
             xbmc.update_video_library()
             self.episode_count = 0
+            time.sleep(60)
+
+    def do_sleep(self):
+        sleepcount = 0
+        while sleepcount < readconfig.sleep_time:
+            if not os.path.isfile(readconfig.sleep_interrupt):
+                time.sleep(1)
+                sleepcount = sleepcount + 1
+            else:
+                message = 'Caught interrupt'
+                self.logger.debug(message)
+                os.remove(readconfig.sleep_interrupt)
+                break
 
     def generate_dir_list(self, download_dir, recursive):
         self.dir_list = []
@@ -157,7 +170,7 @@ if __name__ == "__main__":
                         if not os.path.islink(os.path.join(download_dir, file_name)) and not os.path.isdir(os.path.join(download_dir, file_name)):
                             sb.process_file(download_dir, file_name)
                 sb.update_xbmc()
-                time.sleep(readconfig.sleep_time)
+                sb.do_sleep()
             except KeyboardInterrupt:
                 lock_up.close()
                 os.remove(readconfig.lock_file)
@@ -170,6 +183,7 @@ if __name__ == "__main__":
                 message = 'Unknown error encountered: please file a ticket.'
                 sb.logger.exception(message)
                 sys.exit(2)
+
     else:
         message = 'sofabuddy.py is already locked \"' + readconfig.lock_file + '\"'
         sb.logger.critical(message)

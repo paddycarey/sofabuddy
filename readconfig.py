@@ -165,6 +165,14 @@ except NameError:
     except AttributeError:
         recursive = False
 
+try:
+    sleep_interrupt
+except NameError:
+    try:
+        sleep_interrupt = config.sleep_interrupt
+    except AttributeError:
+        sleep_interrupt = '/tmp/sb/sb_slp_int'
+
 #    Read any advanced settings from config file if set, otherwise use default
 #    values
 
