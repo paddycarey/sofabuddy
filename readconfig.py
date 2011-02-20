@@ -171,7 +171,7 @@ except NameError:
     try:
         sleep_interrupt = config.sleep_interrupt
     except AttributeError:
-        sleep_interrupt = '/tmp/sb/sb_slp_int'
+        sleep_interrupt = '/tmp/sbsleepinterrupt'
 
 #    Read any advanced settings from config file if set, otherwise use default
 #    values
