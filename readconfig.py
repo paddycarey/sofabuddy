@@ -155,7 +155,7 @@ except NameError:
     try:
         sleep_time = config.sleep_time
     except AttributeError:
-        sleep_time = 600
+        sleep_time = 900
 
 try:
     recursive
@@ -164,6 +164,14 @@ except NameError:
         recursive = config.recursive
     except AttributeError:
         recursive = False
+
+try:
+    sleep_interrupt
+except NameError:
+    try:
+        sleep_interrupt = config.sleep_interrupt
+    except AttributeError:
+        sleep_interrupt = '/tmp/sbsleepinterrupt'
 
 #    Read any advanced settings from config file if set, otherwise use default
 #    values
