@@ -162,8 +162,8 @@ if __name__ == "__main__":
         lock_up = open(readconfig.lock_file,'w')
         message = 'Locking sofabuddy.py \"' + readconfig.lock_file + '\"'
         sb.logger.debug(message)
-        sb.generate_dir_list(readconfig.download_dir, readconfig.recursive)
         while True:
+            sb.generate_dir_list(readconfig.download_dir, readconfig.recursive)
             try:
                 for download_dir in sb.dir_list:
                     for file_name in os.listdir(download_dir) :
