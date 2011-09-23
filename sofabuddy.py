@@ -58,7 +58,7 @@ class sofabuddy:
         self.ignore_queue = []
 
     def process_file(self, download_dir, file_name):
-        if not os.path.splitext(filename)[1] == '.mkv' and not os.path.splitext(filename)[1] == '.avi' and not os.path.splitext(filename)[1] == '.mpg':
+        if not os.path.splitext(file_name)[1] == '.mkv' and not os.path.splitext(file_name)[1] == '.avi' and not os.path.splitext(file_name)[1] == '.mpg':
             message = 'Not a video file \"' + file_name + '\"'
             error_string = 'FileNotVideoError'
             self.manage_log_spam(download_dir, file_name, error_string, message)
