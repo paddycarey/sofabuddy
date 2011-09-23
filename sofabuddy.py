@@ -58,59 +58,64 @@ class sofabuddy:
         self.ignore_queue = []
 
     def process_file(self, download_dir, file_name):
-        try:
-            file_details = libsofabuddy.file_details(file_name, readconfig.episode_number_regexes)
-        except sb_exceptions.SeasonOrEpisodeNoNotFound as inst:
-            message = 'Could not extract season or episode number from \"' + os.path.join(download_dir, file_name) + '\"'
-            error_string = str(type(inst)) + str(inst)
-            self.manage_log_spam(download_dir, file_name, error_string, message)
-            message = 'SeasonOrEpisodeNoNotFound=\"' + os.path.join(download_dir, file_name) + '\"'
-            self.manage_log_spam(download_dir, file_name, error_string, message)
-        except sb_exceptions.ShowNameNotFound as inst:
-            message = 'Could not extract show name from \"' + os.path.join(download_dir, file_name) + '\"'
-            error_string = str(type(inst)) + str(inst)
-            self.manage_log_spam(download_dir, file_name, error_string, message)
-            message = 'ShowNameNotFound=\"' + os.path.join(download_dir, file_name) + '\"'
+        if not os.path.splitext(filename)[1] == '.mkv' and not os.path.splitext(filename)[1] == '.avi' and not os.path.splitext(filename)[1] == '.mpg':
+            message = 'Not a video file \"' + file_name + '\"'
+            error_string = 'FileNotVideoError'
             self.manage_log_spam(download_dir, file_name, error_string, message)
         else:
             try:
-                episode_details = libsofabuddy.episode_details(file_details.show_name, file_details.season_no, file_details.episode_no)
-            except KeyError as inst:
-                message = 'Could not find episode on tvrage.com \"' + file_details.show_name + ' ' + file_details.season_no + 'x' + file_details.episode_no + '\"'
+                file_details = libsofabuddy.file_details(file_name, readconfig.episode_number_regexes)
+            except sb_exceptions.SeasonOrEpisodeNoNotFound as inst:
+                message = 'Could not extract season or episode number from \"' + os.path.join(download_dir, file_name) + '\"'
                 error_string = str(type(inst)) + str(inst)
                 self.manage_log_spam(download_dir, file_name, error_string, message)
-                message = 'KeyError=\"' + file_details.show_name + ' ' + file_details.season_no + 'x' + file_details.episode_no + '\"'
+                message = 'SeasonOrEpisodeNoNotFound=\"' + os.path.join(download_dir, file_name) + '\"'
                 self.manage_log_spam(download_dir, file_name, error_string, message)
-            except (AttributeError, IncompleteRead) as inst:
-                message = 'Could not retrieve data for \"' + file_details.show_name + ' ' + file_details.season_no + 'x' + file_details.episode_no + '\"'
+            except sb_exceptions.ShowNameNotFound as inst:
+                message = 'Could not extract show name from \"' + os.path.join(download_dir, file_name) + '\"'
                 error_string = str(type(inst)) + str(inst)
                 self.manage_log_spam(download_dir, file_name, error_string, message)
-                message = 'NetworkError=\"' + str(inst) + '\"'
-                self.manage_log_spam(download_dir, file_name, error_string, message)
-            except TypeError as inst:
-                message = 'Found show but not season on tvrage.com \"' + file_details.show_name + '\"'
-                error_string = str(type(inst)) + str(inst)
-                self.manage_log_spam(download_dir, file_name, error_string, message)
-                message = 'SeasonNotFound=\"' + file_details.show_name + '\"'
-                error_string = str(type(inst)) + str(inst)
-                self.manage_log_spam(download_dir, file_name, error_string, message)
-            except tvrage.exceptions.ShowNotFound as inst:
-                message = 'Could not find show on tvrage.com \"' + file_details.show_name + '\"'
-                error_string = str(type(inst)) + str(inst)
-                self.manage_log_spam(download_dir, file_name, error_string, message)
-                message = 'ShowNotFound=\"' + file_details.show_name + '\"'
-                error_string = str(type(inst)) + str(inst)
+                message = 'ShowNameNotFound=\"' + os.path.join(download_dir, file_name) + '\"'
                 self.manage_log_spam(download_dir, file_name, error_string, message)
             else:
-                file_operations = libsofabuddy.file_operations(episode_details.show_name, file_details.season_no, file_details.episode_no, episode_details.episode_title, file_details.quality, file_details.source, file_details.extension, download_dir, readconfig.tv_dir, readconfig.nuke_dir, file_name)
                 try:
-                    nuke_info = file_operations.get_nuke_info()
-                except (OSError, NameError, AttributeError):
-                    pass
+                    episode_details = libsofabuddy.episode_details(file_details.show_name, file_details.season_no, file_details.episode_no)
+                except KeyError as inst:
+                    message = 'Could not find episode on tvrage.com \"' + file_details.show_name + ' ' + file_details.season_no + 'x' + file_details.episode_no + '\"'
+                    error_string = str(type(inst)) + str(inst)
+                    self.manage_log_spam(download_dir, file_name, error_string, message)
+                    message = 'KeyError=\"' + file_details.show_name + ' ' + file_details.season_no + 'x' + file_details.episode_no + '\"'
+                    self.manage_log_spam(download_dir, file_name, error_string, message)
+                except (AttributeError, IncompleteRead) as inst:
+                    message = 'Could not retrieve data for \"' + file_details.show_name + ' ' + file_details.season_no + 'x' + file_details.episode_no + '\"'
+                    error_string = str(type(inst)) + str(inst)
+                    self.manage_log_spam(download_dir, file_name, error_string, message)
+                    message = 'NetworkError=\"' + str(inst) + '\"'
+                    self.manage_log_spam(download_dir, file_name, error_string, message)
+                except TypeError as inst:
+                    message = 'Found show but not season on tvrage.com \"' + file_details.show_name + '\"'
+                    error_string = str(type(inst)) + str(inst)
+                    self.manage_log_spam(download_dir, file_name, error_string, message)
+                    message = 'SeasonNotFound=\"' + file_details.show_name + '\"'
+                    error_string = str(type(inst)) + str(inst)
+                    self.manage_log_spam(download_dir, file_name, error_string, message)
+                except tvrage.exceptions.ShowNotFound as inst:
+                    message = 'Could not find show on tvrage.com \"' + file_details.show_name + '\"'
+                    error_string = str(type(inst)) + str(inst)
+                    self.manage_log_spam(download_dir, file_name, error_string, message)
+                    message = 'ShowNotFound=\"' + file_details.show_name + '\"'
+                    error_string = str(type(inst)) + str(inst)
+                    self.manage_log_spam(download_dir, file_name, error_string, message)
                 else:
-                    file_operations.do_nuke()
-                file_operations.do_move()
-                self.episode_count = self.episode_count + 1
+                    file_operations = libsofabuddy.file_operations(episode_details.show_name, file_details.season_no, file_details.episode_no, episode_details.episode_title, file_details.quality, file_details.source, file_details.extension, download_dir, readconfig.tv_dir, readconfig.nuke_dir, file_name)
+                    try:
+                        nuke_info = file_operations.get_nuke_info()
+                    except (OSError, NameError, AttributeError):
+                        pass
+                    else:
+                        file_operations.do_nuke()
+                    file_operations.do_move()
+                    self.episode_count = self.episode_count + 1
 
     def manage_log_spam(self, download_dir, file_name, error_string, message):
         if not [[download_dir, file_name], error_string] in self.ignore_queue:
